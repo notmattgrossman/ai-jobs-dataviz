@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Viz Project Proposal</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div>
+        <h1>How AI is Reshaping the Job Market: AI Adoption and Labor Market Change from 2017 - 2025</h1>
+        
+        <p><b>Names:</b> Jonas Schwab & Matt Grossman</p>
+        
+        <p><b>Emails:</b> j.g.schwab@wustl.edu; grossman.m@wustl.edu</p>
+        
+        <p><b>UIDs:</b> 509002; 508495</p>
+        
+        <p><b>Repo Link:</b> <a href="https://github.com/jg-schwab/data-viz-project">here</a></p>
+        
+        <h2>Background and Motivation</h2>
+        <p>AI is reshaping the global economy around itself at breakneck speed. As soon-to-be new grads, we are acutely aware of how AI has the possibility to upend the economy and job market, replacing entry-level jobs faster than we are able to adapt to this new reality.</p>
+        
+        <h2>Project Objectives</h2>
+        <p>We aim to give users a holistic view into how AI is changing the job market and economy for job-seekers.</p>
+        <p>We aim to provide insight into what AI skills are becoming an expectation in the workforce, in order to help individuals understand what active learning they should be doing to make themselves more attractive candidates.</p>
+        <p>We aim to provide insight on different scales (global, country) on where AI is growing and how it is impacting the surrounding areas in terms of job availability.</p>
+        <p>We aim to tell a story on how AI has grown in the last year.</p>
+        <p>What does it mean to be looking for a job in the AI Era? Tell that story.</p>
+        
+        <h2>Dataset</h2>
+        <p>We will be using the Stanford AI Index Dataset. Each year since 2017, the Stanford Human-Centered AI Institute releases the AI Index.</p>
+        
+        <h2>Data Processing</h2>
+        <p>The dataset is released each year from 2017-2025 and the amount of data collected has grown each year. Our main processing task will be to synthesize the entire dataset (currently separated by years and not time-series) into time-series data to show how AI trends have shifted over the last 8 years.</p>
+        <p>The jobs data that we want to focus on is mostly collected between 2023-2025. As AI evolves so quickly, we will be able to show the beginning of trends with these 3 years of data rather than showing a complete picture over many, many years.</p>
+        <p>Much of the data is already relatively clean so there will be minimal work on that end.</p>
+        
+        <h2>Designs</h2>
+        <p>Sketches go here.</p>
+        
+        <h2>Must Have Features</h2>
+        <ul>
+          <li>Scrolly-telling layout (see <a href="https://flourish.studio/blog/no-code-scrollytelling/">examples</a> <a href = "https://www.wsj.com/pro/central-banking/data/reacting-to-fed-rates">for</a> <a href="https://graphics.wsj.com/what-ecb-qe-stimulus-has-done/">reference</a>). We will be using the Wall Street Journal's <a href="https://github.com/WSJ/scroll-watcher?tab=readme-ov-file">ScrollWatch Repo</a> to handle the interaction. When possible, scrolling will be the means by which users interact with data.</li>
+          <li>When data will permit, we will show timebound trends of how AI has evolved the skills and types of jobs being hired for.</li>
+          <li>Map visualization</li>
+        </ul>
+        
+        <h2>Nice to Have Features</h2>
+        <ul>
+          <li>Map Zoom is going from a global view to zoom into countries or continents, then to zoom into cities, showing AI jobs and AI economic growth with a key visual (maybe as the person scrolls through the storytelling).</li>
+          <li>Ghost traces to show past years' data on the current trends with hover features that allow the examination of older data to contrast the 2025 report.</li>
+          <li>Some sort of predictive feature that shows calculations based on current trajectories.</li>
+        </ul>
+        
+        <h2>Timeline</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Matt Goals</th>
+              <th>Jonas Goals</th>
+              <th>Overall Goals</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>October 27</td>
+              <td>EDA<br><br>Brainstorm sheet and 2 visualization proposal sheets.<br><br>Decide what nice-to-have features we need.</td>
+              <td>EDA<br><br>Brainstorm sheet and 2 visualization proposal sheets.</td>
+              <td>HTML Project Proposal Complete:<br>- Convert documents and designs into HTML<br>- Complete Schedule with personal goals<br>- Complete half of the 5-sheet design methodology and pick a favorite as the final design.</td>
+            </tr>
+            <tr>
+              <td colspan="4" class="milestone">October 27th - Final Project Proposal</td>
+            </tr>
+            <tr>
+              <td>November 3</td>
+              <td>EDA continued<br><br>Come up with 5 interesting insights/visualizations from the data</td>
+              <td>Clean up data and figure out how to compile multiple datasets for chronological visualizations across multiple years.<br><br>EDA continued<br><br>Come up with 5 interesting insights/visualizations from the data [python].</td>
+              <td>Data processed and cleaned. Exploratory data analysis to begin to put together a data story.</td>
+            </tr>
+            <tr>
+              <td>November 10</td>
+              <td>Organize insights into a clear narrative story<br><br>Convert half of our visualizations into d3.</td>
+              <td>Put narrative story with static visualizations into a scrollable page<br><br>Convert half of our visualizations into d3.</td>
+              <td>Storytelling and visualizations (static) with writing/framing</td>
+            </tr>
+            <tr>
+              <td colspan="4" class="milestone">November 10th - Milestone 1</td>
+            </tr>
+            <tr>
+              <td>November 17</td>
+              <td>TBD</td>
+              <td>TBD</td>
+              <td>Implemented scrollable, interactive visualizations.</td>
+            </tr>
+            <tr>
+              <td>November 24</td>
+              <td>TBD</td>
+              <td>TBD</td>
+              <td>Implemented animations and interactivity</td>
+            </tr>
+            <tr>
+              <td colspan="4" class="milestone">November 24th - Milestone 2</td>
+            </tr>
+            <tr>
+              <td>December 4</td>
+              <td>TBD</td>
+              <td>TBD</td>
+              <td>Implemented feedback from milestone 2; clean up visual design; nitpicking.<br><br>Add anything missing from the project to the process book.</td>
+            </tr>
+            <tr>
+              <td colspan="4" class="milestone">December 4th - Final Presentation</td>
+            </tr>
+            <tr>
+              <td>December 9</td>
+              <td>TBD</td>
+              <td>TBD</td>
+              <td>Our goal is to have the project done by December 4 but if we need to make edits that can be done in this week.</td>
+            </tr>
+            <tr>
+              <td colspan="4" class="milestone">December 9th - Final Submission</td>
+            </tr>
+          </tbody>
+        </table>
+    </div>
+</body>
+</html>
