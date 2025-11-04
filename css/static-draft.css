@@ -1,0 +1,51 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #F0EEE6;
+  font-family: 'Merriweather', serif;
+  line-height: 1.6;
+  color: #000;
+  padding: 2rem;
+}
+
+.title {
+  max-width: 900px;
+  margin: 0 auto 2rem;
+  color: #2c3e50;
+  font-weight: 700;
+  font-size: 2.5rem;
+  line-height: 1.3;
+}
+
+.subtitle {
+  max-width: 900px;
+  margin: 0 auto 3rem;
+  color: #34495e;
+  font-weight: 600;
+  font-size: 1.5rem;
+  line-height: 1.4;
+}
+
+.body-text {
+  max-width: 900px;
+  margin: 0 auto 2rem;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.viz-block {
+  max-width: 900px;
+  margin: 3rem auto;
+  padding: 2rem;
+  
+}
+
+.viz-block svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
