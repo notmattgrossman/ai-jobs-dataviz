@@ -98,8 +98,8 @@ d3.csv("data/4. Economy/Data/fig_4.4.12.csv").then(function(data) {
         .attr("class", "tooltip")
         .style("opacity", 0)
         .style("position", "absolute")
-        .style("background-color", "rgba(0, 0, 0, 0.8)")
-        .style("color", "white")
+        .style("background-color", "#2c3e50")
+        .style("color", "#F0EEE6")
         .style("padding", "4px 8px")
         .style("border-radius", "3px")
         .style("font-size", "10px")
@@ -155,7 +155,7 @@ d3.csv("data/4. Economy/Data/fig_4.4.12.csv").then(function(data) {
         .on("mouseover", function(event, d) {
             tooltip.transition()
                 .duration(200)
-                .style("opacity", 0.9);
+                .style("opacity", 1);
             tooltip.html(d.key);
         })
         .on("mousemove", function(event) {
@@ -184,7 +184,7 @@ d3.csv("data/4. Economy/Data/fig_4.4.12.csv").then(function(data) {
         .attr("alignment-baseline", "middle")
         .attr("font-size", "11px")
         .attr("font-family", "'Merriweather', serif")
-        .attr("fill", "#333")
+        .attr("fill", "#2c3e50")
         .attr("font-weight", d => d === "Overall" ? "bold" : "normal")
         .text(d => d);
 
@@ -201,7 +201,7 @@ d3.csv("data/4. Economy/Data/fig_4.4.12.csv").then(function(data) {
     xAxisGroup.selectAll("text")
         .attr("font-size", "11px")
         .attr("font-family", "'Merriweather', serif")
-        .attr("fill", "#333");
+        .attr("fill", "#2c3e50");
 
     xAxisGroup.selectAll("line")
         .attr("stroke", "#ccc");
@@ -264,7 +264,7 @@ d3.csv("data/4. Economy/Data/fig_4.4.12.csv").then(function(data) {
         .attr("y", 9)
         .attr("font-size", "10px")
         .attr("font-family", "'Merriweather', serif")
-        .attr("fill", "#333")
+        .attr("fill", "#2c3e50")
         .text(d => d);
 
     // Second row
@@ -289,7 +289,7 @@ d3.csv("data/4. Economy/Data/fig_4.4.12.csv").then(function(data) {
         .attr("y", 9)
         .attr("font-size", "10px")
         .attr("font-family", "'Merriweather', serif")
-        .attr("fill", "#333")
+        .attr("fill", "#2c3e50")
         .text(d => d);
 
 }).catch(function(error) {
