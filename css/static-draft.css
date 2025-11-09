@@ -48,6 +48,19 @@ p {
   line-height: 1.6;
 }
 
+a {
+  text-decoration: underline;
+}
+
+a:hover {
+  text-decoration: underline;
+  color: gray;
+}
+
+a:visited {
+  color: #000;
+}
+
 .viz-block {
   max-width: 900px;
   margin: 3rem auto;

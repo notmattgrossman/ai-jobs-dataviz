@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Static Draft</title>
     <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/static-draft.css">
 </head>
@@ -12,11 +12,23 @@
     
     <h2>AI Adoption and Labor Market Change from 2017 - 2025</h2>
     
-    <h3>The opportunity: <em>What types of AI jobs and skills are growing fastest?</em></h3>
-    <p></p>
-    <div class="viz-block"></div>
-    
     <h3>The threat: <em>What jobs does AI threaten? Who will be most impacted?</em></h3>
+
+    <p>A generation of college students in America were told a <a href="https://www.nytimes.com/2025/09/29/podcasts/the-daily/big-tech-told-kids-to-code-the-jobs-didnt-follow.html" target="_blank">simple story</a>: go to college, learn to code, and graduate into a job with a six-figure salary, private chef lunches, and massages at work. For two decades, this was the case.</p>
+
+    <p>Now, as the AI wave just starts to crash onto the technology industry, that story is beginning to crack.</p>    
+    <p>When surveyed, professionals across industries reported their anticipated changes in workforce size. The most optimistic response came from the IT sector and the most pessimistic was from HR.</p>
+    <div class="viz-block" id="industry-outlook"></div>
+
+    <p>While the IT sector is most optimisitc, that optimism is not evenly distributed. Based on vulnerability scores, many jobs in the IT sector are at high risk of being replaced by AI.</p>
+    <div class="viz-block" id="tech-job-vulnerability"></div>
+
+    <p>Unlike previous technological revolutions, AI is not just replacing lower-skilled, lower-paying jobs. Many of the highest paying jobs are also at the highest risk of being replaced by AI.</p>
+    <div class="viz-block" id="tech-job-vulnerability-scatter"></div>
+
+    <p>Wether tech workers are ready for it or not, the AI revolution is here to stay. The key now is to stay ahead of the puck, use it to your advantage, and be ready to adapt.</p>
+
+    <!-- <h3>The opportunity: <em>What types of AI jobs and skills are growing fastest?</em></h3>
     <p></p>
     <div class="viz-block"></div>
     
@@ -24,8 +36,12 @@
     <p></p>
     <div class="viz-block"></div>
     
-    <p></p>
+    <p></p> -->
     
+    <script src="js/d3.v7.min.js"></script>
+    <script src="js/industry-outlook.js"></script>
+    <script src="js/tech-job-vulnerability.js"></script>
+    <script src="js/tech-job-vulnerability-scatter.js"></script>
     <script src="js/script.js"></script>
 </body>
 </html>
