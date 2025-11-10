@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,41 +8,60 @@
     <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/static-draft.css">
 </head>
+
 <body>
     <h1>How AI is Reshaping the Job Market Around Itself</h1>
-    
+
     <h2>A data exploration of the AI's impact on the shifting labor market</h2>
-    
+
     <h3>The threat: <em>What jobs does AI threaten? Who will be most impacted?</em></h3>
 
-    <p>A generation of college students in America were told a <a href="https://www.nytimes.com/2025/09/29/podcasts/the-daily/big-tech-told-kids-to-code-the-jobs-didnt-follow.html" target="_blank">simple story</a>: go to college, learn to code, and graduate into a job with a six-figure salary, private chef lunches, and massages at work. For two decades, this was the case.</p>
+    <p>A generation of college students in America were told a <a
+            href="https://www.nytimes.com/2025/09/29/podcasts/the-daily/big-tech-told-kids-to-code-the-jobs-didnt-follow.html"
+            target="_blank">simple story</a>: go to college, learn to code, and graduate into a job with a six-figure
+        salary, private chef lunches, and massages at work. For two decades, this was the case.</p>
 
-    <p>Now, as the AI wave just starts to crash onto the technology industry, that story is beginning to crack.</p>    
-    <p>When surveyed, professionals across industries reported their anticipated changes in workforce size. The most optimistic response came from the IT sector and the most pessimistic was from HR.</p>
+    <p>Now, as the AI wave just starts to crash onto the technology industry, that story is beginning to crack.</p>
+    <p>When surveyed, professionals across industries reported their anticipated changes in workforce size. The most
+        optimistic response came from the IT sector and the most pessimistic was from HR.</p>
     <div class="viz-block" id="industry-outlook"></div>
 
-    <p>While the IT sector is most optimisitc, that optimism is not evenly distributed. Based on vulnerability scores, many jobs in the IT sector are at high risk of being replaced by AI.</p>
+    <p>While the IT sector is most optimisitc, that optimism is not evenly distributed. Based on vulnerability scores,
+        many jobs in the IT sector are at high risk of being replaced by AI.</p>
     <div class="viz-block" id="tech-job-vulnerability"></div>
 
-    <p>Unlike previous technological revolutions, AI is not just replacing lower-skilled, lower-paying jobs. Many of the highest paying jobs are also at the highest risk of being replaced by AI.</p>
+    <p>Unlike previous technological revolutions, AI is not just replacing lower-skilled, lower-paying jobs. Many of the
+        highest paying jobs are also at the highest risk of being replaced by AI.</p>
     <div class="viz-block" id="tech-job-vulnerability-scatter"></div>
 
-    <p>Wether tech workers are ready for it or not, the AI revolution is here to stay. The key now is to stay ahead of the puck, use it to your advantage, and be ready to adapt.</p>
+    <p>Wether tech workers are ready for it or not, the AI revolution is here to stay. The key now is to stay ahead of
+        the puck, use it to your advantage, and be ready to adapt.</p>
 
-    <!-- <h3>The opportunity: <em>What types of AI jobs and skills are growing fastest?</em></h3>
-    <p></p>
-    <div class="viz-block"></div>
-    
     <h3>What to know: <em>Where is AI concentrated geographically?</em></h3>
-    <p></p>
-    <div class="viz-block"></div>
-    
-    <p></p> -->
-    
+    <p>AI job postings are not distributed evenly across the globe. While some countries see significant AI hiring
+        activity, others lag behind. The size of each circle represents the volume of AI job postings relative to
+        population.</p>
+    <div class="viz-block" id="global-map"></div>
+    <p>The global map reveals clear gerographic conventration in North America and Western Europe which dominate AI
+        hiring. A notable missing data point is China and India which both don't have data within our datasets.</p>
+    <p>Zooming in on the most prominent AI hiring hub, the United States it is clear that states such as California,
+        Texas, and New York account for the majority share of AI job postings underscoring the clustering of AI
+        innovation in the US.</p>
+    <div class="viz-block" id="us-map"></div>
+    <p>Together, these maps demonstrate the rise of AI in the job market is not a global wave, but a selective surge
+        concentrated in a few countries and cities. The geographic imbalance suggests access to AI opportunities is
+        uneven worldwide. </p>
+
+
     <script src="js/d3.v7.min.js"></script>
+    <script src="topojson/topojson.min.js"></script>
     <script src="js/industry-outlook.js"></script>
     <script src="js/tech-job-vulnerability.js"></script>
     <script src="js/tech-job-vulnerability-scatter.js"></script>
+    <script src="js/globalMap.js"></script>
+    <script src="js/USMap.js"></script>
+
     <script src="js/script.js"></script>
 </body>
+
 </html>
