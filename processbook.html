@@ -5,14 +5,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Data Viz Project Proposal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
   <div>
-    <h1>How AI is Reshaping the Job Market: AI Adoption and Labor Market Change from 2017 - 2025</h1>
+    <h1>Process Book: <em>How AI is Reshaping the Job Market</em></h1>
 
-    <p><b>Names:</b> Jonas Schwab &amp; Matt Grossman; Sophia Raudez</p>
+    <p><b>Names:</b> Jonas Schwab; Matt Grossman; Sophia Raudez</p>
 
     <p><b>Emails:</b> j.g.schwab@wustl.edu; grossman.m@wustl.edu; raudez@wustl.edu</p>
 
@@ -20,39 +21,69 @@
 
     <p><b>Repo Link:</b> <a href="https://github.com/jg-schwab/data-viz-project" target="_blank">here</a></p>
 
+    <hr>
+
     <h2>Background and Motivation</h2>
     <p>AI is reshaping the global economy around itself at breakneck speed. As soon-to-be new grads, we are acutely
       aware of how AI has the possibility to upend the economy and job market, replacing entry-level jobs faster than we
       are able to adapt to this new reality.</p>
 
     <h2>Project Objectives</h2>
-    <p>What does it mean to be looking for a job in the AI Era? We aim to tell that story.</p>
-    <p>We aim to give users a holistic view into how AI is changing the job market and economy for job-seekers. We aim to show what jobs are at highest risk of being replaced by AI, and what jobs have the highest opportunity of being created by AI.</p>
-    <p>We aim to provide insight into what AI skills are becoming an expectation in the workforce, in order to help
-      individuals understand what active learning they should be doing to make themselves more attractive candidates.
-    </p>
-    <p>We aim to provide insight on different scales (global, country) on where AI is growing and how it is impacting
-      the surrounding areas in terms of job availability.</p>
-
+    <p>We want to paint a story of this snapshot in time - before AI is generally useful in the workforce but just as it is staring to impact the job market.</p>
+    <p>We want to tell this story in three parts: the risks, the opportunities, and the geographic distribution.</p>
+    <ul>
+      <li>The risks section will focus on the jobs that are at highest risk of being replaced by AI. It will show how many jobs that were traditionally 'safe' like white-collar jobs are now at risk of being replaced by AI.</li>
+      <li>The opportunities section will focus on the skills that are becoming an expectation in the workforce, in order to help individuals understand what active learning they should be doing to make themselves more attractive candidates. It will also focus on what jobs and industries have the most AI upside.</li>
+      <li>The geographic distribution section will focus on the geographic distribution of AI jobs to show how it is not evenly distributed across the globe or even the US.</li>
+    </ul>
     <h2>Dataset</h2>
     <p>We will be using the Stanford AI Index Dataset. Each year since 2017, the Stanford Human-Centered AI Institute
       releases the AI Index.</p>
+    <p>The dataset contains data in many categories, but we will focus on the economic AI data. This section of the AI Index is focused on the economic impact of AI on the job market and economy. For this project, the most important datasubsets are the jov risk scores, skills demand, and geographic distribution.</p>
 
     <h2>Data Processing</h2>
-    <p>The dataset is released each year from 2017-2025 and the amount of data collected has grown each year. Our main
-      processing task will be to synthesize the entire dataset (currently separated by years and not time-series) into
-      time-series data to show how AI trends have shifted over the last 8 years.</p>
+    <p>The dataset is released each year from 2017-2025 and the amount of data collected has grown each year. </p>
     <p>The jobs data that we want to focus on is mostly collected between 2023-2025. As AI evolves so quickly, we will
       be able to show the beginning of trends with these 3 years of data rather than showing a complete picture over
       many, many years.</p>
     <p>Much of the data is already relatively clean so there will be minimal work on that end.</p>
 
-    <h2>Designs</h2>
-    <img src="img/brainstorm1.png" alt="Brainstorm 1" width="300">
-    <img src="img/design1.png" alt="Design 1" width="300">
-    <img src="img/design2.png" alt="Design 2" width="300">
-    <img src="img/design3.jpg" alt="Design 3" width="300">
-    <img src="img/finaldesign.jpg" alt="Final Design" width="300">
+    <h2>Exploratory Data Analysis</h2>
+    <p>To start the project, we did extensive EDA on the data. All of the python notebooks are in the data-exploration folder. The following were our most interesting visualizations/insights based on the data:</p>
+    
+    <div class="eda-grid">
+      <figure>
+        <img src="img/eda1.png" alt="EDA 1">
+      </figure>
+      <figure>
+        <img src="img/eda7.png" alt="EDA 7">
+      </figure>
+      <figure>
+        <img src="img/eda2.png" alt="EDA 2">
+      </figure>
+      <figure>
+        <img src="img/eda3.png" alt="EDA 3">
+      </figure>
+      <figure>
+        <img src="img/eda4.png" alt="EDA 4">
+      </figure>
+      <figure>
+        <img src="img/eda5.png" alt="EDA 5">
+      </figure>
+
+      <figure class="eda-full-width">
+        <img src="img/eda6.png" alt="EDA 6">
+      </figure>
+    </div>
+
+    <h2>Design Concepts</h2>
+    <div class="eda-grid" style="background-color: transparent;">
+      <img src="img/brainstorm1.png" alt="Brainstorm 1" width="300">
+      <img src="img/design1.png" alt="Design 1" width="300">
+      <img src="img/design2.png" alt="Design 2" width="300">
+      <img src="img/design3.jpg" alt="Design 3" width="300">
+      <img src="img/finaldesign.jpg" alt="Final Design" width="300">
+    </div>
 
     <h2>Must Have Features</h2>
     <ul>
@@ -65,7 +96,6 @@
       <li>When data will permit, we will show timebound trends of how AI has evolved the skills and types of jobs being
         hired for.</li>
       <li>Map visualization</li>
-      <li>Users will be able to input their career title to see have that highlighted automatically in relevant secitons of the visualizations.</li>
     </ul>
 
     <h2>Nice to Have Features</h2>
@@ -75,7 +105,11 @@
       <li>Ghost traces to show past years' data on the current trends with hover features that allow the examination of
         older data to contrast the 2025 report.</li>
       <li>Some sort of predictive feature that shows calculations based on current trajectories.</li>
+      <li>Users will be able to input their career title to see have that highlighted automatically in relevant secitons of the visualizations.</li>
     </ul>
+
+    <h2>Design Evolution</h2>
+    <p> <b>Checkpoint 1:</b> So far, we have an article with visualizations that are not interactive on scroll. Some have some hover features, but no scrollability. In class, we've discussed how motion is a key principle of storytelling for data, and we have a plan for how to implmeent that motion into our porject. While the design of the visualizations might not change much from here, implementing the scrollability will be a major change to the project and the layout of the site. We're excited to see where this goes! </p>
 
     <h2>Timeline</h2>
     <table>
@@ -113,10 +147,9 @@
         </tr>
         <tr>
           <td>November 10</td>
-          <td>Organize insights into a clear narrative story<br><br>Convert half of our visualizations into d3.</td>
-          <td>Put narrative story with static visualizations into a scrollable page<br><br>Convert half of our
-            visualizations into d3.</td>
-          <td>Convert half of our visualizations into d3.<br><br>Refine visual design</td>
+          <td>Organize insights into a clear narrative story<br><br>Section 1 (risks) writing and 3 interactive visualizations in d3.</td>
+          <td>Put narrative story with static visualizations into a scrollable page<br><br>Section 3 (maps) writing and 3 interactive visualizations in d3.</td>
+          <td>Section 2 (opportunities and skills) writing and 2 interactive visualizations in d3.</td>
           <td>Storytelling and visualizations (static) with writing/framing</td>
         </tr>
         <tr>
@@ -124,7 +157,7 @@
         </tr>
         <tr>
           <td>November 17</td>
-          <td>TBD</td>
+          <td>Explore the ScrollWatcher library and implement it into our project. Figure out layout and mechanics for how scrolling will work.</td>
           <td>TBD</td>
           <td>TBD</td>
           <td>Implemented scrollable, interactive visualizations.</td>

@@ -86,3 +86,15 @@ a:visited {
   height: auto;
   display: block;
 }
+
+footer {
+  max-width: 900px;
+  margin: 4rem auto 2rem;
+  text-align: center;
+}
+
+footer p {
+  font-size: 0.875rem;
+  color: #2c3e50;
+  margin-bottom: 0;
+}

@@ -6,56 +6,94 @@
 
 body {
   background-color: #F0EEE6;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Merriweather', serif;
   line-height: 1.6;
-  color: #333;
+  color: #2c3e50;
+  padding: 2rem;
 }
 
 div {
   max-width: 900px;
   margin: 0 auto;
-  padding: 3rem 2rem;
 }
 
 h1 {
   color: #2c3e50;
   font-weight: 700;
-  font-size: 2.5rem;
-  margin-bottom: 2rem;
-  line-height: 1.3;
+  font-size: 2.25rem;
+  margin-bottom: 1rem;
+  line-height: 1.2;
 }
 
 h2 {
-  color: #34495e;
+  color: #2c3e50;
+  font-weight: 700;
+  font-size: 1.25rem;
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  font-style: normal;
+  line-height: 1.5;
+}
+
+h3 {
+  color: #2c3e50;
   font-weight: 600;
-  font-size: 1.75rem;
-  margin-top: 3rem;
-  margin-bottom: 1rem;
+  font-size: 1.125rem;
+  margin: 4rem auto 1.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid #2c3e50;
+  padding-bottom: 0.5rem;
+  line-height: 1.6;
+}
+
+h3 em {
+  font-style: italic;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: normal;
+  font-size: 1.125rem;
 }
 
 p {
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
   font-size: 1rem;
+  line-height: 1.7;
+  color: #2c3e50;
 }
 
 ul {
   margin-left: 2rem;
   margin-bottom: 1.5rem;
+  max-width: 900px;
 }
 
 li {
   margin-bottom: 0.75rem;
   font-size: 1rem;
+  color: #2c3e50;
+  line-height: 1.7;
 }
 
 a {
-  color: #3498db;
-  text-decoration: none;
+  color: #2c3e50;
+  text-decoration: underline;
 }
 
 a:hover {
   text-decoration: underline;
-  color: #2980b9;
+  opacity: 0.5;
+}
+
+a:visited {
+  color: #2c3e50;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid #2c3e50;
+  margin: 2rem 0 4rem 0;
+  max-width: 900px;
 }
 
 table {
@@ -64,11 +102,12 @@ table {
   margin-top: 1.5rem;
   margin-bottom: 1.5rem;
   background-color: #fff;
-  border: 2px solid #34495e;
+  border: 2px solid #2c3e50;
+  max-width: 900px;
 }
 
 thead {
-  background-color: #34495e;
+  background-color: #2c3e50;
   color: #fff;
 }
 
@@ -76,7 +115,8 @@ th {
   padding: 1rem;
   text-align: left;
   font-weight: 600;
-  border: 1px solid #34495e;
+  border: 1px solid #2c3e50;
+  color: #fff;
 }
 
 th:first-child,
@@ -86,8 +126,9 @@ td:first-child {
 
 td {
   padding: 1rem;
-  border: 1px solid #34495e;
+  border: 1px solid #2c3e50;
   vertical-align: top;
+  color: #2c3e50;
 }
 
 tr:last-child td {
@@ -110,4 +151,31 @@ tr:last-child td {
 
 img {
   width: 100%;
+}
+
+.eda-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px 32px;
+  margin-bottom: 2em;
+  background-color: white;
+}
+
+.eda-grid figure {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.eda-grid .eda-title {
+  grid-column: 1 / span 2;
+  justify-self: start;
+  font-weight: bold;
+  font-size: 1.1em;
+  margin-bottom: 0.8em;
+}
+
+.eda-grid figure.eda-full-width {
+  grid-column: 1 / span 2;
 }
