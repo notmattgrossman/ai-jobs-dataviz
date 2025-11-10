@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scroll-Driven Narrative</title>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-fixto@0.0.1/jquery.fixto.min.js"></script>
+</head>
+<body>
+    <div class="header">
+        <h1>How AI is Reshaping the Job Market Around Itself</h1>
+        <h2>A data exploration of the AI's impact on the shifting labor market</h2>
+    </div>
+
+    <div class="container">
+        <!-- Left Column: Visualizations (75%) -->
+        <div class="viz-column">
+            <!-- Section 1: Industry Outlook -->
+            <div class="scroll-section" id="section-1" style="height: 4000px;">
+                <div class="sticky-viz" id="industry-outlook-container">
+                    <div id="industry-outlook"></div>
+                </div>
+            </div>
+
+            <!-- Section 2: Bubble to Scatter -->
+            <div class="scroll-section" id="section-2" style="height: 4000px;">
+                <div class="sticky-viz" id="bubble-scatter-container">
+                    <div id="bubble-scatter-viz"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column: Text (25%) -->
+        <div class="text-column">
+            <div class="text-content" id="text-content">
+                <div class="text-section">
+                    <h3>The threat: <em>What jobs does AI threaten? Who will be most impacted?</em></h3>
+                    <p>A generation of college students in America were told a <a href="https://www.nytimes.com/2025/09/29/podcasts/the-daily/big-tech-told-kids-to-code-the-jobs-didnt-follow.html" target="_blank">simple story</a>: go to college, learn to code, and graduate into a job with a six-figure salary, private chef lunches, and massages at work. For two decades, this was the case.</p>
+                    <p>Now, as the AI wave just starts to crash onto the technology industry, that story is beginning to crack.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/d3.v7.min.js"></script>
+    <script src="js/scroll-watcher.js"></script>
+    <script src="js/industry-outlook-scroll.js"></script>
+    <script src="js/bubble-scatter-scroll.js"></script>
+    <script src="js/scroll-text.js"></script>
+    <script src="js/scroll-narrative.js"></script>
+</body>
+</html>
+

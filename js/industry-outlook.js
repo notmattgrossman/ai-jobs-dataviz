@@ -80,14 +80,19 @@ d3.csv("data/4. Economy/Data/fig_4.4.12.csv").then(function(data) {
 
     // Set up dimensions
     const margin = { top: 40, right: 40, bottom: 150, left: 200 };
-    const width = 900 - margin.left - margin.right;
+    const baseWidth = 900;
+    const width = baseWidth - margin.left - margin.right;
     const height = Math.max(400, functions.length * 40) - margin.top - margin.bottom;
+    const svgWidth = baseWidth;
+    const svgHeight = height + margin.top + margin.bottom;
 
     // Create SVG
     const svg = d3.select("#industry-outlook")
         .append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom);
+        .attr("width", "100%")
+        .attr("height", svgHeight)
+        .attr("viewBox", `0 0 ${svgWidth} ${svgHeight}`)
+        .attr("preserveAspectRatio", "xMidYMid meet");
 
     const g = svg.append("g")
         .attr("transform", `translate(${margin.left},${margin.top})`);
