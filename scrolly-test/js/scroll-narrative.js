@@ -1,58 +1,83 @@
 // Scroll-Watcher Integration for Narrative Visualizations
+// Text is now static HTML, so we only need to handle visualization updates
 
-// Wait for DOM and visualizations to be ready
 $(document).ready(function() {
-    // Wait for visualizations to initialize
+    // Initialize scroll watchers
     setTimeout(initScrollNarrative, 1000);
 });
 
 function initScrollNarrative() {
-    console.log('Initializing scroll narrative...');
-    
     // Section 1: Industry Outlook
-    const section1Watcher = scrollWatcher({
+    scrollWatcher({
         parent: '#section-1',
-        onUpdate: function(scrollPercent, parentElement) {
-            console.log('Section 1 scroll:', scrollPercent);
-            // Update visualization based on scroll percentage
+        onUpdate: function(scrollPercent) {
             if (scrollPercent < 0.33) {
-                // Show only Overall
                 updateIndustryOutlook('overall');
             } else if (scrollPercent < 0.66) {
-                // Show all functions
                 updateIndustryOutlook('all');
             } else {
-                // Show only IT
                 updateIndustryOutlook('it');
             }
-
-            // Update text content
-            const textSection = getTextSectionForScroll(1, scrollPercent);
-            if (textSection) {
-                updateText(textSection);
-            }
         }
     });
 
-    // Section 2: Bubble to Scatter
-    const section2Watcher = scrollWatcher({
+    // Section 2: Tech Job Vulnerability (Bubble)
+    scrollWatcher({
         parent: '#section-2',
-        onUpdate: function(scrollPercent, parentElement) {
-            console.log('Section 2 scroll:', scrollPercent);
-            // Update visualization based on scroll percentage
-            updateBubbleScatter(scrollPercent);
-
-            // Update text content
-            const textSection = getTextSectionForScroll(2, scrollPercent);
-            if (textSection) {
-                updateText(textSection);
+        onUpdate: function(scrollPercent) {
+            if (scrollPercent > 0.1 && !techJobVulnerabilityViz) {
+                createTechJobVulnerability();
             }
         }
     });
 
-    // Initialize text content
-    updateText('section-1-overall');
-    
-    console.log('Scroll narrative initialized');
-}
+    // Section 3: Tech Job Vulnerability Scatter
+    scrollWatcher({
+        parent: '#section-3',
+        onUpdate: function(scrollPercent) {
+            if (scrollPercent > 0.1 && !techJobVulnerabilityScatterViz) {
+                createTechJobVulnerabilityScatter();
+            }
+        }
+    });
 
+    // Section 4: Skill Demand Changes
+    scrollWatcher({
+        parent: '#section-4',
+        onUpdate: function(scrollPercent) {
+            if (scrollPercent > 0.1 && !skillDemandChangesViz) {
+                createSkillDemandChanges();
+            }
+        }
+    });
+
+    // Section 5: High AI Opportunity
+    scrollWatcher({
+        parent: '#section-5',
+        onUpdate: function(scrollPercent) {
+            if (scrollPercent > 0.1 && !highAIOpportunityViz) {
+                createHighAIOpportunity();
+            }
+        }
+    });
+
+    // Section 6: Global Map
+    scrollWatcher({
+        parent: '#section-6',
+        onUpdate: function(scrollPercent) {
+            if (scrollPercent > 0.1 && !globalMapViz) {
+                createGlobalMap();
+            }
+        }
+    });
+
+    // Section 7: US Map
+    scrollWatcher({
+        parent: '#section-7',
+        onUpdate: function(scrollPercent) {
+            if (scrollPercent > 0.1 && !usMapViz) {
+                createUSMap();
+            }
+        }
+    });
+}
