@@ -1,17 +1,24 @@
 document.addEventListener("DOMContentLoaded", async function () {
+    const theme = window.aiVizTheme || {};
+    const textPrimary = theme.palette?.textPrimary || "#f6f7ff";
+    const textMuted = theme.palette?.textMuted || "#9da7c2";
+    const surface = theme.palette?.surface || "#0e111f";
+    const borderColor = theme.palette?.border || "rgba(255,255,255,0.08)";
     const tooltip = d3.select("body")
         .append("div")
         .attr("class", "tooltip")
         .style("opacity", 0)
         .style("position", "absolute")
-        .style("background-color", "#2c3e50")
-        .style("color", "#F0EEE6")
-        .style("padding", "4px 8px")
-        .style("border-radius", "3px")
-        .style("font-size", "10px")
+        .style("padding", "6px 10px")
+        .style("border-radius", "8px")
+        .style("font-size", "11px")
         .style("font-family", "'Merriweather', serif")
         .style("pointer-events", "none")
         .style("z-index", "1000");
+
+    if (theme.styleTooltip) {
+        theme.styleTooltip(tooltip);
+    }
 
     const stateData = await d3.csv("data/4. Economy/Data/fig_4.2.10.csv");
 
@@ -32,7 +39,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         .attr("font-size", "20px")
         .attr("font-family", "'Merriweather', serif")
         .attr("font-weight", "600")
-        .attr("fill", "#2c3e50")
+        .attr("fill", textPrimary)
         .text("US AI Job Posting Distribution by State (2024)");
 
     const projection = d3.geoAlbersUsa()
@@ -66,7 +73,11 @@ document.addEventListener("DOMContentLoaded", async function () {
     const us = await d3.json("topojson/states-10m.json");
     const states = topojson.feature(us, us.objects.states).features;
 
-    const colorScale = d3.scaleSequential(d3.interpolateGreens)
+    const colorScale = d3.scaleSequential()
+        .interpolator(d3.interpolateRgb(
+            theme.palette?.accentSecondary || "#6be2ff",
+            theme.palette?.accent || "#1fb8ff"
+        ))
         .domain([0, d3.max(Array.from(dataByState.values()))]);
 
     svg.selectAll("path")
@@ -78,10 +89,10 @@ document.addEventListener("DOMContentLoaded", async function () {
             const stateName = d.properties.name;
             const stateCode = stateNameToCode[stateName];
             const value = dataByState.get(stateCode);
-            return value ? colorScale(value) : "#eee";
+            return value ? colorScale(value) : surface;
         })
-        .attr("stroke", "#999")
-        .attr("stroke-width", 0.5)
+        .attr("stroke", borderColor)
+        .attr("stroke-width", 0.7)
         .on("mouseover", function (event, d) {
             const stateName = d.properties.name;
             const stateCode = stateNameToCode[stateName];
@@ -92,7 +103,7 @@ document.addEventListener("DOMContentLoaded", async function () {
                 // .attr("stroke", "#2c3e50")
                 // .attr("stroke-width", 2);
 
-                tooltip.transition()
+            tooltip.transition()
                     .duration(200)
                     .style("opacity", 1);
                 tooltip.html(
@@ -154,14 +165,15 @@ document.addEventListener("DOMContentLoaded", async function () {
         .call(legendAxis)
         .selectAll("text")
         .attr("font-family", "'Merriweather', serif")
-        .attr("font-size", "10px");
+        .attr("font-size", "10px")
+        .attr("fill", textMuted);
 
     legend.append("text")
         .attr("x", legendWidth / 2)
         .attr("y", -5)
         .attr("text-anchor", "middle")
         .attr("font-family", "'Merriweather', serif")
-        .attr("font-size", "20px")
-        .attr("fill", "#2c3e50")
+        .attr("font-size", "12px")
+        .attr("fill", textPrimary)
         .text("% of US AI Job Postings");
 });

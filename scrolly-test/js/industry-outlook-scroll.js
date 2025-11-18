@@ -1,4 +1,20 @@
 // Industry Outlook Horizontal Stacked Bar Chart - Scroll-Driven Version
+const industryTheme = window.aiVizTheme || {};
+const industryTextPrimary = industryTheme.palette?.textPrimary || "#f6f7ff";
+const industryTextMuted = industryTheme.palette?.textMuted || "#9da7c2";
+const industryGridColor = industryTheme.gridline || "rgba(255,255,255,0.12)";
+const industryStackColors = (industryTheme.stackPalette && industryTheme.stackPalette.length >= 8)
+    ? industryTheme.stackPalette.slice(0, 8)
+    : [
+        "#a6f0ff",
+        "#43cbff",
+        "#0f99ff",
+        "#94a3b8",
+        "#4c5672",
+        "#ff93b6",
+        "#ff5c8d",
+        "#e02f72"
+    ];
 let industryOutlookViz = null;
 
 function createIndustryOutlook(filterState = 'all') {
@@ -64,19 +80,9 @@ function createIndustryOutlook(filterState = 'all') {
             });
         }
 
-        // Color scale
         const colorScale = d3.scaleOrdinal()
             .domain(responses)
-            .range([
-                "#2d5016",      // Dark green
-                "#4a7c2a",      // Medium green
-                "#6ba84f",      // Light green
-                "#d3d3d3",      // Gray
-                "#f0f0f0",      // Light gray
-                "#f4a582",      // Light red
-                "#d6604d",      // Medium red
-                "#b2182b"       // Dark red
-            ]);
+            .range(industryStackColors);
 
         // Prepare data for stacking
         const functionData = functions.map(function(func) {
@@ -148,8 +154,8 @@ function createIndustryOutlook(filterState = 'all') {
             .attr("width", d => xScale(d[1]) - xScale(d[0]))
             .attr("height", yScale.bandwidth())
             .attr("fill", d => colorScale(d.key))
-            .attr("stroke", "#fff")
-            .attr("stroke-width", 0.5);
+            .attr("stroke", "rgba(5,6,13,0.45)")
+            .attr("stroke-width", 0.6);
 
         // Add function labels
         g.append("g")
@@ -164,7 +170,7 @@ function createIndustryOutlook(filterState = 'all') {
             .attr("alignment-baseline", "middle")
             .attr("font-size", "11px")
             .attr("font-family", "'Merriweather', serif")
-            .attr("fill", "#2c3e50")
+            .attr("fill", d => d === "Overall" ? industryTextPrimary : industryTextMuted)
             .attr("font-weight", d => d === "Overall" ? "bold" : "normal")
             .text(d => d);
 
@@ -181,10 +187,10 @@ function createIndustryOutlook(filterState = 'all') {
         xAxisGroup.selectAll("text")
             .attr("font-size", "11px")
             .attr("font-family", "'Merriweather', serif")
-            .attr("fill", "#2c3e50");
+            .attr("fill", industryTextMuted);
 
         xAxisGroup.selectAll("line")
-            .attr("stroke", "#ccc");
+            .attr("stroke", industryGridColor);
 
         // Add title
         svg.append("text")
@@ -194,7 +200,7 @@ function createIndustryOutlook(filterState = 'all') {
             .attr("font-size", "16px")
             .attr("font-family", "'Merriweather', serif")
             .attr("font-weight", "600")
-            .attr("fill", "#2c3e50")
+            .attr("fill", industryTextPrimary)
             .text("Expected Change in Workforce Size by Function");
 
         // Add legend
@@ -242,7 +248,7 @@ function createIndustryOutlook(filterState = 'all') {
             .attr("y", 9)
             .attr("font-size", "10px")
             .attr("font-family", "'Merriweather', serif")
-            .attr("fill", "#2c3e50")
+            .attr("fill", industryTextMuted)
             .text(d => d);
 
         // Second row
@@ -267,7 +273,7 @@ function createIndustryOutlook(filterState = 'all') {
             .attr("y", 9)
             .attr("font-size", "10px")
             .attr("font-family", "'Merriweather', serif")
-            .attr("fill", "#2c3e50")
+            .attr("fill", industryTextMuted)
             .text(d => d);
 
         industryOutlookViz = { svg, g, xScale, yScale, functions, data, responses, colorScale };

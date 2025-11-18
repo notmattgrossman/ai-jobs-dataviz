@@ -1,4 +1,8 @@
 // AI Skill Demand Changes - Multiple Lines Chart (2017-2025) - Scroll-Driven Version
+const skillTheme = window.aiVizTheme || {};
+const skillTextPrimary = skillTheme.palette?.textPrimary || "#f6f7ff";
+const skillTextMuted = skillTheme.palette?.textMuted || "#9da7c2";
+const skillGridColor = skillTheme.gridline || "rgba(255,255,255,0.12)";
 let skillDemandChangesViz = null;
 let skillDemandData = null;
 
@@ -109,14 +113,16 @@ function createSkillDemandChanges() {
             .attr("class", "tooltip")
             .style("opacity", 0)
             .style("position", "absolute")
-            .style("background-color", "#2c3e50")
-            .style("color", "#F0EEE6")
             .style("padding", "8px 12px")
-            .style("border-radius", "4px")
+            .style("border-radius", "8px")
             .style("font-size", "11px")
             .style("font-family", "'Merriweather', serif")
             .style("pointer-events", "none")
             .style("z-index", "1000");
+
+        if (skillTheme.styleTooltip) {
+            skillTheme.styleTooltip(tooltip);
+        }
 
         // Scales
         const xScale = d3.scaleLinear()
@@ -130,12 +136,22 @@ function createSkillDemandChanges() {
             .nice();
 
         // Color scale for different skills
+        const palette = (skillTheme.categoricalPalette && skillTheme.categoricalPalette.length >= topSkills.length)
+            ? skillTheme.categoricalPalette.slice(0, topSkills.length)
+            : [
+                "#8fe8ff",
+                "#65d4ff",
+                "#43bbff",
+                "#1f9bff",
+                "#0f7dd6",
+                "#5ab8ff",
+                "#3a9eff",
+                "#1e7edb"
+            ];
+
         const colorScale = d3.scaleOrdinal()
             .domain(topSkills.map(d => d.skill))
-            .range([
-                "#b2182b", "#d6604d", "#f4a582", "#2d5016",
-                "#4a7c2a", "#6ba84f", "#9b59b6", "#3498db"
-            ]);
+            .range(palette);
 
         // Line generator
         const line = d3.line()
@@ -199,7 +215,7 @@ function createSkillDemandChanges() {
                         .attr("cy", yScale(point.demandIndex))
                         .attr("r", point.isProjected ? 3 : 4)
                         .attr("fill", colorScale(skillData.skill))
-                        .attr("stroke", "#fff")
+                        .attr("stroke", "rgba(5,6,13,0.45)")
                         .attr("stroke-width", 1.5)
                         .attr("opacity", point.isProjected ? 0.7 : 1)
                         .attr("stroke-dasharray", point.isProjected ? "2,2" : "0");
@@ -213,7 +229,7 @@ function createSkillDemandChanges() {
             .attr("x2", xScale(2024))
             .attr("y1", 0)
             .attr("y2", height)
-            .attr("stroke", "#999")
+            .attr("stroke", skillGridColor)
             .attr("stroke-width", 1)
             .attr("stroke-dasharray", "5,5")
             .attr("opacity", 0.5);
@@ -231,10 +247,10 @@ function createSkillDemandChanges() {
         xAxisGroup.selectAll("text")
             .attr("font-size", "11px")
             .attr("font-family", "'Merriweather', serif")
-            .attr("fill", "#2c3e50");
+            .attr("fill", skillTextMuted);
 
         xAxisGroup.selectAll("line")
-            .attr("stroke", "#ccc");
+            .attr("stroke", skillGridColor);
 
         // Add x-axis label
         g.append("text")
@@ -245,7 +261,7 @@ function createSkillDemandChanges() {
             .attr("font-size", "12px")
             .attr("font-family", "'Merriweather', serif")
             .attr("font-weight", "600")
-            .attr("fill", "#2c3e50")
+            .attr("fill", skillTextPrimary)
             .text("Year (2017-2025)");
 
         // Add y-axis
@@ -260,10 +276,10 @@ function createSkillDemandChanges() {
         yAxisGroup.selectAll("text")
             .attr("font-size", "11px")
             .attr("font-family", "'Merriweather', serif")
-            .attr("fill", "#2c3e50");
+            .attr("fill", skillTextMuted);
 
         yAxisGroup.selectAll("line")
-            .attr("stroke", "#ccc");
+            .attr("stroke", skillGridColor);
 
         // Add y-axis label
         g.append("text")
@@ -275,7 +291,7 @@ function createSkillDemandChanges() {
             .attr("font-size", "12px")
             .attr("font-family", "'Merriweather', serif")
             .attr("font-weight", "600")
-            .attr("fill", "#2c3e50")
+            .attr("fill", skillTextPrimary)
             .text("Demand Index (0-100)");
 
         // Add title
@@ -286,7 +302,7 @@ function createSkillDemandChanges() {
             .attr("font-size", "16px")
             .attr("font-family", "'Merriweather', serif")
             .attr("font-weight", "600")
-            .attr("fill", "#2c3e50")
+            .attr("fill", skillTextPrimary)
             .text("AI Skill Demand Changes (2017-2025)");
 
         // Add subtitle
@@ -297,7 +313,7 @@ function createSkillDemandChanges() {
             .attr("font-size", "12px")
             .attr("font-family", "'Merriweather', serif")
             .attr("font-weight", "400")
-            .attr("fill", "#2c3e50")
+            .attr("fill", skillTextMuted)
             .text("Top 8 skills showing demand index trends over time (2025 projected)");
 
         // Add legend
@@ -326,7 +342,7 @@ function createSkillDemandChanges() {
             .attr("y", 4)
             .attr("font-size", "11px")
             .attr("font-family", "'Merriweather', serif")
-            .attr("fill", "#2c3e50")
+            .attr("fill", skillTextMuted)
             .text(d => d.skill);
 
         // Add note about projection
@@ -337,7 +353,7 @@ function createSkillDemandChanges() {
             .attr("font-size", "10px")
             .attr("font-family", "'Merriweather', serif")
             .attr("font-style", "italic")
-            .attr("fill", "#666")
+            .attr("fill", skillTextMuted)
             .text("Dashed vertical line indicates transition from historical data (2017-2024) to projected data (2025)");
 
         skillDemandChangesViz = { svg, g, xScale, yScale, lines };

@@ -1,5 +1,22 @@
 // Industry Outlook Horizontal Stacked Bar Chart
 d3.csv("data/4. Economy/Data/fig_4.4.12.csv").then(function(data) {
+    const theme = window.aiVizTheme || {};
+    const textPrimary = theme.palette?.textPrimary || "#f6f7ff";
+    const textMuted = theme.palette?.textMuted || "#9da7c2";
+    const gridColor = theme.gridline || "rgba(255,255,255,0.12)";
+    const stackColors = (theme.stackPalette && theme.stackPalette.length >= 8)
+        ? theme.stackPalette.slice(0, 8)
+        : [
+            "#a6f0ff",
+            "#43cbff",
+            "#0f99ff",
+            "#94a3b8",
+            "#4c5672",
+            "#ff93b6",
+            "#ff5c8d",
+            "#e02f72"
+        ];
+
     // Parse percentage values
     data.forEach(function(d) {
         d.percentage = parseFloat(d["% of respondents"]);
@@ -50,19 +67,9 @@ d3.csv("data/4. Economy/Data/fig_4.4.12.csv").then(function(data) {
         return functionScores[b] - functionScores[a]; // Descending order (most positive first)
     });
 
-    // Color scale: green (increase) to red (decrease)
     const colorScale = d3.scaleOrdinal()
         .domain(responses)
-        .range([
-            "#2d5016",      // Dark green - Increase by >20%
-            "#4a7c2a",      // Medium green - Increase by 11–20%
-            "#6ba84f",      // Light green - Increase by 3–10%
-            "#d3d3d3",      // Gray - Little or no change
-            "#f0f0f0",      // Light gray - Don't know
-            "#f4a582",      // Light red - Decrease by 3–10%
-            "#d6604d",      // Medium red - Decrease by 11–20%
-            "#b2182b"       // Dark red - Decrease by >20%
-        ]);
+        .range(stackColors);
 
     // Prepare data for stacking
     const functionData = functions.map(function(func) {
@@ -103,14 +110,16 @@ d3.csv("data/4. Economy/Data/fig_4.4.12.csv").then(function(data) {
         .attr("class", "tooltip")
         .style("opacity", 0)
         .style("position", "absolute")
-        .style("background-color", "#2c3e50")
-        .style("color", "#F0EEE6")
-        .style("padding", "4px 8px")
-        .style("border-radius", "3px")
-        .style("font-size", "10px")
+        .style("padding", "6px 10px")
+        .style("border-radius", "8px")
+        .style("font-size", "11px")
         .style("font-family", "'Merriweather', serif")
         .style("pointer-events", "none")
         .style("z-index", "1000");
+
+    if (theme.styleTooltip) {
+        theme.styleTooltip(tooltip);
+    }
 
     // Create stack generator
     const stack = d3.stack()
@@ -155,8 +164,8 @@ d3.csv("data/4. Economy/Data/fig_4.4.12.csv").then(function(data) {
         .attr("width", d => xScale(d[1]) - xScale(d[0]))
         .attr("height", yScale.bandwidth())
         .attr("fill", d => colorScale(d.key))
-        .attr("stroke", "#fff")
-        .attr("stroke-width", 0.5)
+        .attr("stroke", "rgba(5,6,13,0.45)")
+        .attr("stroke-width", 0.6)
         .on("mouseover", function(event, d) {
             tooltip.transition()
                 .duration(200)
@@ -189,7 +198,7 @@ d3.csv("data/4. Economy/Data/fig_4.4.12.csv").then(function(data) {
         .attr("alignment-baseline", "middle")
         .attr("font-size", "11px")
         .attr("font-family", "'Merriweather', serif")
-        .attr("fill", "#2c3e50")
+        .attr("fill", d => d === "Overall" ? textPrimary : textMuted)
         .attr("font-weight", d => d === "Overall" ? "bold" : "normal")
         .text(d => d);
 
@@ -206,10 +215,10 @@ d3.csv("data/4. Economy/Data/fig_4.4.12.csv").then(function(data) {
     xAxisGroup.selectAll("text")
         .attr("font-size", "11px")
         .attr("font-family", "'Merriweather', serif")
-        .attr("fill", "#2c3e50");
+        .attr("fill", textMuted);
 
     xAxisGroup.selectAll("line")
-        .attr("stroke", "#ccc");
+        .attr("stroke", gridColor);
 
     // Add title
     svg.append("text")
@@ -219,7 +228,7 @@ d3.csv("data/4. Economy/Data/fig_4.4.12.csv").then(function(data) {
         .attr("font-size", "16px")
         .attr("font-family", "'Merriweather', serif")
         .attr("font-weight", "600")
-        .attr("fill", "#2c3e50")
+        .attr("fill", textPrimary)
         .text("Expected Change in Workforce Size by Function");
 
     // Add legend - split into two rows
@@ -269,7 +278,7 @@ d3.csv("data/4. Economy/Data/fig_4.4.12.csv").then(function(data) {
         .attr("y", 9)
         .attr("font-size", "10px")
         .attr("font-family", "'Merriweather', serif")
-        .attr("fill", "#2c3e50")
+        .attr("fill", textMuted)
         .text(d => d);
 
     // Second row
@@ -294,7 +303,7 @@ d3.csv("data/4. Economy/Data/fig_4.4.12.csv").then(function(data) {
         .attr("y", 9)
         .attr("font-size", "10px")
         .attr("font-family", "'Merriweather', serif")
-        .attr("fill", "#2c3e50")
+        .attr("fill", textMuted)
         .text(d => d);
 
 }).catch(function(error) {

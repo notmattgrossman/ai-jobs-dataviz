@@ -1,6 +1,10 @@
 // Global Map Visualization - Scroll-Driven Version
 let globalMapViz = null;
 let globalMapData = null;
+const globalMapTheme = window.aiVizTheme || {};
+const globalTextPrimary = globalMapTheme.palette?.textPrimary || "#f6f7ff";
+const globalSurface = globalMapTheme.palette?.surface || "#0e111f";
+const globalBorder = globalMapTheme.palette?.border || "rgba(255,255,255,0.08)";
 
 async function createGlobalMap() {
     // Clear existing visualization
@@ -11,14 +15,16 @@ async function createGlobalMap() {
         .attr("class", "tooltip")
         .style("opacity", 0)
         .style("position", "absolute")
-        .style("background-color", "#2c3e50")
-        .style("color", "#F0EEE6")
-        .style("padding", "4px 8px")
-        .style("border-radius", "3px")
-        .style("font-size", "10px")
+        .style("padding", "6px 10px")
+        .style("border-radius", "8px")
+        .style("font-size", "11px")
         .style("font-family", "'Merriweather', serif")
         .style("pointer-events", "none")
         .style("z-index", "1000");
+
+    if (globalMapTheme.styleTooltip) {
+        globalMapTheme.styleTooltip(tooltip);
+    }
 
     try {
         // Load data
@@ -81,9 +87,9 @@ async function createGlobalMap() {
             .enter()
             .append("path")
             .attr("d", path)
-            .attr("fill", "#eee")
-            .attr("stroke", "#999")
-            .attr("stroke-width", 1);
+            .attr("fill", globalSurface)
+            .attr("stroke", globalBorder)
+            .attr("stroke-width", 0.8);
 
         const circleData = [];
         data2024.forEach(row => {
@@ -109,16 +115,23 @@ async function createGlobalMap() {
             .domain([0, d3.max(circleData, d => d.size)])
             .range([4, 32]);
 
+        const circleColor = d3.scaleSequential()
+            .domain(d3.extent(circleData, d => d.value))
+            .interpolator(d3.interpolateRgb(
+                globalMapTheme.palette?.accentSecondary || "#6be2ff",
+                globalMapTheme.palette?.accent || "#1fb8ff"
+            ));
+
         svg.selectAll("circle")
             .data(circleData)
             .enter()
             .append("circle")
             .attr("transform", d => `translate(${projection(d.coords)})`)
             .attr("r", d => radiusScale(d.size))
-            .attr("fill", "#2d5016")
-            .attr("fill-opacity", 0.6)
-            .attr("stroke", "white")
-            .attr("stroke-width", 0.5)
+            .attr("fill", d => circleColor(d.value))
+            .attr("fill-opacity", 0.85)
+            .attr("stroke", "rgba(5,6,13,0.8)")
+            .attr("stroke-width", 0.8)
             .on("mouseover", function (event, d) {
                 tooltip.transition()
                     .duration(200)
@@ -147,7 +160,7 @@ async function createGlobalMap() {
             .attr("font-size", "20px")
             .attr("font-family", "'Merriweather', serif")
             .attr("font-weight", "600")
-            .attr("fill", "#2c3e50")
+            .attr("fill", globalTextPrimary)
             .text("Global AI Job Posting Concentration (2024)");
 
         globalMapViz = { svg, projection, path, circleData };

@@ -1,5 +1,9 @@
 // Jobs with High AI Opportunity - Scatter Plot
 d3.csv("data/4. Economy/Data/fig_4.2.25.csv").then(function(data) {
+    const theme = window.aiVizTheme || {};
+    const textPrimary = theme.palette?.textPrimary || "#f6f7ff";
+    const textMuted = theme.palette?.textMuted || "#9da7c2";
+    const gridColor = theme.gridline || "rgba(255,255,255,0.12)";
     // Parse data
     data.forEach(function(d) {
         d.opportunity = parseFloat(d.pct_occ_scaled);
@@ -42,14 +46,16 @@ d3.csv("data/4. Economy/Data/fig_4.2.25.csv").then(function(data) {
         .attr("class", "tooltip")
         .style("opacity", 0)
         .style("position", "absolute")
-        .style("background-color", "#2c3e50")
-        .style("color", "#F0EEE6")
         .style("padding", "6px 10px")
-        .style("border-radius", "4px")
+        .style("border-radius", "8px")
         .style("font-size", "11px")
         .style("font-family", "'Merriweather', serif")
         .style("pointer-events", "none")
         .style("z-index", "1000");
+
+    if (theme.styleTooltip) {
+        theme.styleTooltip(tooltip);
+    }
 
     // Scales
     const xScale = d3.scaleLinear()
@@ -62,12 +68,14 @@ d3.csv("data/4. Economy/Data/fig_4.2.25.csv").then(function(data) {
         .range([height, 0])
         .nice();
 
-    // Color scale for opportunity (green to red, higher opportunity = more red)
     const maxOpportunity = d3.max(highOpportunityJobs, d => d.opportunity);
     const minOpportunity = d3.min(highOpportunityJobs, d => d.opportunity);
     const colorScale = d3.scaleSequential()
         .domain([minOpportunity, maxOpportunity])
-        .interpolator(d3.interpolateRgb("#2d5016", "#b2182b")); // Green to red
+        .interpolator(d3.interpolateRgb(
+            theme.palette?.accentSecondary || "#6be2ff",
+            theme.palette?.accent || "#1fb8ff"
+        ));
 
     // Add grid lines first (so they appear behind the circles)
     g.append("g")
@@ -78,7 +86,7 @@ d3.csv("data/4. Economy/Data/fig_4.2.25.csv").then(function(data) {
             .tickSize(-height)
             .tickFormat(""))
         .selectAll("line")
-        .attr("stroke", "#e0e0e0")
+        .attr("stroke", gridColor)
         .attr("stroke-width", 1);
 
     g.append("g")
@@ -88,7 +96,7 @@ d3.csv("data/4. Economy/Data/fig_4.2.25.csv").then(function(data) {
             .tickSize(-width)
             .tickFormat(""))
         .selectAll("line")
-        .attr("stroke", "#e0e0e0")
+        .attr("stroke", gridColor)
         .attr("stroke-width", 1);
 
     // Create circles (after grid lines so they appear on top)
@@ -100,7 +108,7 @@ d3.csv("data/4. Economy/Data/fig_4.2.25.csv").then(function(data) {
         .attr("cy", d => yScale(d.opportunity))
         .attr("r", 5)
         .attr("fill", d => colorScale(d.opportunity))
-        .attr("stroke", "#fff")
+        .attr("stroke", "rgba(5,6,13,0.45)")
         .attr("stroke-width", 1)
         .attr("opacity", 0.7)
         .on("mouseover", function(event, d) {
@@ -112,7 +120,7 @@ d3.csv("data/4. Economy/Data/fig_4.2.25.csv").then(function(data) {
             // Highlight circle
             d3.select(this)
                 .attr("stroke-width", 2.5)
-                .attr("stroke", "#333")
+                .attr("stroke", textPrimary)
                 .attr("r", 7)
                 .attr("opacity", 1);
         })
@@ -131,7 +139,7 @@ d3.csv("data/4. Economy/Data/fig_4.2.25.csv").then(function(data) {
             // Reset circle
             d3.select(this)
                 .attr("stroke-width", 1)
-                .attr("stroke", "#fff")
+                .attr("stroke", "rgba(5,6,13,0.45)")
                 .attr("r", 5)
                 .attr("opacity", 0.7);
         });
@@ -148,7 +156,7 @@ d3.csv("data/4. Economy/Data/fig_4.2.25.csv").then(function(data) {
         .selectAll("text")
         .attr("font-size", "11px")
         .attr("font-family", "'Merriweather', serif")
-        .attr("fill", "#2c3e50");
+        .attr("fill", textMuted);
 
     // Add x-axis label
     g.append("text")
@@ -159,7 +167,7 @@ d3.csv("data/4. Economy/Data/fig_4.2.25.csv").then(function(data) {
         .attr("font-size", "12px")
         .attr("font-family", "'Merriweather', serif")
         .attr("font-weight", "600")
-        .attr("fill", "#2c3e50")
+        .attr("fill", textPrimary)
         .text("Salary");
 
     // Add y-axis
@@ -173,7 +181,7 @@ d3.csv("data/4. Economy/Data/fig_4.2.25.csv").then(function(data) {
         .selectAll("text")
         .attr("font-size", "11px")
         .attr("font-family", "'Merriweather', serif")
-        .attr("fill", "#2c3e50");
+        .attr("fill", textMuted);
 
     // Hide y-axis domain line to prevent overlap with topmost grid line
     g.select(".y-axis").select(".domain")
@@ -188,7 +196,7 @@ d3.csv("data/4. Economy/Data/fig_4.2.25.csv").then(function(data) {
         .attr("font-size", "12px")
         .attr("font-family", "'Merriweather', serif")
         .attr("font-weight", "600")
-        .attr("fill", "#2c3e50")
+        .attr("fill", textPrimary)
         .text("Opportunity");
 
     // Add title
@@ -199,7 +207,7 @@ d3.csv("data/4. Economy/Data/fig_4.2.25.csv").then(function(data) {
         .attr("font-size", "16px")
         .attr("font-family", "'Merriweather', serif")
         .attr("font-weight", "600")
-        .attr("fill", "#2c3e50")
+        .attr("fill", textPrimary)
         .text("Jobs with High AI Opportunity");
 
     // Add subtitle
@@ -210,7 +218,7 @@ d3.csv("data/4. Economy/Data/fig_4.2.25.csv").then(function(data) {
         .attr("font-size", "12px")
         .attr("font-family", "'Merriweather', serif")
         .attr("font-weight", "400")
-        .attr("fill", "#2c3e50")
+        .attr("fill", textMuted)
         .text("Top 30% of jobs by AI opportunity score (higher score = greater AI transformation potential)");
 
 }).catch(function(error) {

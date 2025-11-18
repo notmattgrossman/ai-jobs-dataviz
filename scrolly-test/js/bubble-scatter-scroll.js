@@ -13,6 +13,10 @@ let width = null;
 let height = null;
 let svg = null;
 let g = null;
+const bubbleScatterTheme = window.aiVizTheme || {};
+const bubbleTextPrimary = bubbleScatterTheme.palette?.textPrimary || "#f6f7ff";
+const bubbleTextMuted = bubbleScatterTheme.palette?.textMuted || "#9da7c2";
+const bubbleGridColor = bubbleScatterTheme.gridline || "rgba(255,255,255,0.12)";
 
 function createBubbleScatterViz() {
     // Clear existing visualization
@@ -64,6 +68,14 @@ function createBubbleScatterViz() {
             .domain([minRisk, maxRisk])
             .range([5, 90]);
 
+        const colorInterpolator = d3.scaleLinear()
+            .domain([minRisk, maxRisk])
+            .range([
+                bubbleScatterTheme.palette?.divergingPositive || bubbleScatterTheme.palette?.accentSecondary || "#43cbff",
+                bubbleScatterTheme.palette?.divergingNegative || bubbleScatterTheme.palette?.negative || "#ff5c8d"
+            ])
+            .interpolate(d3.interpolateRgb);
+
         // Store initial bubble positions (will be set by force simulation)
         // Store final scatter positions
         bubbleData.forEach(function(d, i) {
@@ -114,8 +126,8 @@ function createBubbleScatterViz() {
             .attr("cx", d => d.bubbleX)
             .attr("cy", d => d.bubbleY)
             .attr("r", d => d.bubbleRadius)
-            .attr("fill", "#2d5016")
-            .attr("stroke", "#fff")
+            .attr("fill", d => colorInterpolator(d.riskScore))
+            .attr("stroke", "rgba(5,6,13,0.45)")
             .attr("stroke-width", 1)
             .attr("opacity", 0);
 
@@ -165,7 +177,7 @@ function createBubbleScatterViz() {
             .attr("alignment-baseline", "middle")
             .attr("font-size", "12px")
             .attr("font-family", "'Merriweather', serif")
-            .attr("fill", "#F0EEE6")
+            .attr("fill", bubbleTextPrimary)
             .attr("font-weight", "700")
             .text(d => d.Title)
             .style("pointer-events", "none")
@@ -182,7 +194,7 @@ function createBubbleScatterViz() {
                 .tickSize(-height)
                 .tickFormat(""))
             .selectAll("line")
-            .attr("stroke", "#e0e0e0")
+            .attr("stroke", bubbleGridColor)
             .attr("stroke-width", 1)
             .attr("opacity", 0);
 
@@ -193,7 +205,7 @@ function createBubbleScatterViz() {
                 .tickSize(-width)
                 .tickFormat(""))
             .selectAll("line")
-            .attr("stroke", "#e0e0e0")
+            .attr("stroke", bubbleGridColor)
             .attr("stroke-width", 1)
             .attr("opacity", 0);
 
@@ -212,7 +224,7 @@ function createBubbleScatterViz() {
         xAxisGroup.selectAll("text")
             .attr("font-size", "11px")
             .attr("font-family", "'Merriweather', serif")
-            .attr("fill", "#2c3e50");
+            .attr("fill", bubbleTextMuted);
 
         const yAxisGroup = g.append("g")
             .attr("class", "y-axis")
@@ -222,10 +234,16 @@ function createBubbleScatterViz() {
         yAxisGroup.selectAll("text")
             .attr("font-size", "11px")
             .attr("font-family", "'Merriweather', serif")
-            .attr("fill", "#2c3e50");
+            .attr("fill", bubbleTextMuted);
 
         yAxisGroup.select(".domain")
             .attr("stroke", "none");
+
+        xAxisGroup.selectAll("line, path")
+            .attr("stroke", bubbleGridColor);
+
+        yAxisGroup.selectAll("line, path")
+            .attr("stroke", bubbleGridColor);
 
         // Add axis labels
         const xAxisLabel = svg.append("text")
@@ -235,7 +253,7 @@ function createBubbleScatterViz() {
             .attr("text-anchor", "middle")
             .attr("font-size", "12px")
             .attr("font-family", "'Merriweather', serif")
-            .attr("fill", "#2c3e50")
+            .attr("fill", bubbleTextPrimary)
             .attr("opacity", 0);
         
         xAxisLabel.append("tspan")
@@ -245,6 +263,7 @@ function createBubbleScatterViz() {
         xAxisLabel.append("tspan")
             .attr("font-weight", "400")
             .attr("font-style", "italic")
+            .attr("fill", bubbleTextMuted)
             .text(" (Higher risk score means more vulnerable)");
 
         const yAxisLabel = svg.append("text")
@@ -256,7 +275,7 @@ function createBubbleScatterViz() {
             .attr("font-size", "12px")
             .attr("font-family", "'Merriweather', serif")
             .attr("font-weight", "600")
-            .attr("fill", "#2c3e50")
+            .attr("fill", bubbleTextPrimary)
             .attr("opacity", 0)
             .text("Median Salary");
 
@@ -268,7 +287,7 @@ function createBubbleScatterViz() {
             .attr("font-size", "16px")
             .attr("font-family", "'Merriweather', serif")
             .attr("font-weight", "600")
-            .attr("fill", "#2c3e50")
+            .attr("fill", bubbleTextPrimary)
             .text("Job Vulnerability and Salary");
 
         bubbleScatterViz = {

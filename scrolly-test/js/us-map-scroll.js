@@ -1,6 +1,11 @@
 // US Map Visualization - Scroll-Driven Version
 let usMapViz = null;
 let usMapData = null;
+const usMapTheme = window.aiVizTheme || {};
+const usTextPrimary = usMapTheme.palette?.textPrimary || "#f6f7ff";
+const usTextMuted = usMapTheme.palette?.textMuted || "#9da7c2";
+const usSurface = usMapTheme.palette?.surface || "#0e111f";
+const usBorder = usMapTheme.palette?.border || "rgba(255,255,255,0.08)";
 
 async function createUSMap() {
     // Clear existing visualization
@@ -11,14 +16,16 @@ async function createUSMap() {
         .attr("class", "tooltip")
         .style("opacity", 0)
         .style("position", "absolute")
-        .style("background-color", "#2c3e50")
-        .style("color", "#F0EEE6")
-        .style("padding", "4px 8px")
-        .style("border-radius", "3px")
-        .style("font-size", "10px")
+        .style("padding", "6px 10px")
+        .style("border-radius", "8px")
+        .style("font-size", "11px")
         .style("font-family", "'Merriweather', serif")
         .style("pointer-events", "none")
         .style("z-index", "1000");
+
+    if (usMapTheme.styleTooltip) {
+        usMapTheme.styleTooltip(tooltip);
+    }
 
     try {
         // Load data
@@ -43,7 +50,7 @@ async function createUSMap() {
             .attr("font-size", "20px")
             .attr("font-family", "'Merriweather', serif")
             .attr("font-weight", "600")
-            .attr("fill", "#2c3e50")
+            .attr("fill", usTextPrimary)
             .text("US AI Job Posting Distribution by State (2024)");
 
         const projection = d3.geoAlbersUsa()
@@ -77,7 +84,11 @@ async function createUSMap() {
         const us = await d3.json("../topojson/states-10m.json");
         const states = topojson.feature(us, us.objects.states).features;
 
-        const colorScale = d3.scaleSequential(d3.interpolateGreens)
+        const colorScale = d3.scaleSequential()
+            .interpolator(d3.interpolateRgb(
+                usMapTheme.palette?.accentSecondary || "#6be2ff",
+                usMapTheme.palette?.accent || "#1fb8ff"
+            ))
             .domain([0, d3.max(Array.from(dataByState.values()))]);
 
         svg.selectAll("path")
@@ -89,10 +100,10 @@ async function createUSMap() {
                 const stateName = d.properties.name;
                 const stateCode = stateNameToCode[stateName];
                 const value = dataByState.get(stateCode);
-                return value ? colorScale(value) : "#eee";
+                return value ? colorScale(value) : usSurface;
             })
-            .attr("stroke", "#999")
-            .attr("stroke-width", 0.5)
+            .attr("stroke", usBorder)
+            .attr("stroke-width", 0.7)
             .on("mouseover", function (event, d) {
                 const stateName = d.properties.name;
                 const stateCode = stateNameToCode[stateName];
@@ -157,15 +168,16 @@ async function createUSMap() {
             .call(legendAxis)
             .selectAll("text")
             .attr("font-family", "'Merriweather', serif")
-            .attr("font-size", "10px");
+            .attr("font-size", "10px")
+            .attr("fill", usTextMuted);
 
         legend.append("text")
             .attr("x", legendWidth / 2)
             .attr("y", -5)
             .attr("text-anchor", "middle")
             .attr("font-family", "'Merriweather', serif")
-            .attr("font-size", "20px")
-            .attr("fill", "#2c3e50")
+            .attr("font-size", "12px")
+            .attr("fill", usTextPrimary)
             .text("% of US AI Job Postings");
 
         usMapViz = { svg, projection, path, states, dataByState };

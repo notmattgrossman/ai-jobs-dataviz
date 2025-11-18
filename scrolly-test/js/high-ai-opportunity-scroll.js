@@ -1,4 +1,8 @@
 // Jobs with High AI Opportunity - Scatter Plot - Scroll-Driven Version
+const opportunityTheme = window.aiVizTheme || {};
+const opportunityTextPrimary = opportunityTheme.palette?.textPrimary || "#f6f7ff";
+const opportunityTextMuted = opportunityTheme.palette?.textMuted || "#9da7c2";
+const opportunityGridColor = opportunityTheme.gridline || "rgba(255,255,255,0.12)";
 let highAIOpportunityViz = null;
 let highAIOpportunityData = null;
 
@@ -56,14 +60,16 @@ function createHighAIOpportunity() {
             .attr("class", "tooltip")
             .style("opacity", 0)
             .style("position", "absolute")
-            .style("background-color", "#2c3e50")
-            .style("color", "#F0EEE6")
             .style("padding", "6px 10px")
-            .style("border-radius", "4px")
+            .style("border-radius", "8px")
             .style("font-size", "11px")
             .style("font-family", "'Merriweather', serif")
             .style("pointer-events", "none")
             .style("z-index", "1000");
+
+        if (opportunityTheme.styleTooltip) {
+            opportunityTheme.styleTooltip(tooltip);
+        }
 
         // Scales
         const xScale = d3.scaleLinear()
@@ -81,7 +87,10 @@ function createHighAIOpportunity() {
         const minOpportunity = d3.min(highOpportunityJobs, d => d.opportunity);
         const colorScale = d3.scaleSequential()
             .domain([minOpportunity, maxOpportunity])
-            .interpolator(d3.interpolateRgb("#2d5016", "#b2182b"));
+            .interpolator(d3.interpolateRgb(
+                opportunityTheme.palette?.accentSecondary || "#6be2ff",
+                opportunityTheme.palette?.accent || "#1fb8ff"
+            ));
 
         // Add grid lines first
         g.append("g")
@@ -92,7 +101,7 @@ function createHighAIOpportunity() {
                 .tickSize(-height)
                 .tickFormat(""))
             .selectAll("line")
-            .attr("stroke", "#e0e0e0")
+            .attr("stroke", opportunityGridColor)
             .attr("stroke-width", 1);
 
         g.append("g")
@@ -102,7 +111,7 @@ function createHighAIOpportunity() {
                 .tickSize(-width)
                 .tickFormat(""))
             .selectAll("line")
-            .attr("stroke", "#e0e0e0")
+            .attr("stroke", opportunityGridColor)
             .attr("stroke-width", 1);
 
         // Create circles
@@ -114,9 +123,9 @@ function createHighAIOpportunity() {
             .attr("cy", d => yScale(d.opportunity))
             .attr("r", 5)
             .attr("fill", d => colorScale(d.opportunity))
-            .attr("stroke", "#fff")
+            .attr("stroke", "rgba(5,6,13,0.45)")
             .attr("stroke-width", 1)
-            .attr("opacity", 0.7)
+            .attr("opacity", 0.8)
             .on("mouseover", function(event, d) {
                 tooltip.transition()
                     .duration(200)
@@ -125,7 +134,7 @@ function createHighAIOpportunity() {
                 
                 d3.select(this)
                     .attr("stroke-width", 2.5)
-                    .attr("stroke", "#333")
+                    .attr("stroke", opportunityTextPrimary)
                     .attr("r", 7)
                     .attr("opacity", 1);
             })
@@ -142,7 +151,7 @@ function createHighAIOpportunity() {
                 
                 d3.select(this)
                     .attr("stroke-width", 1)
-                    .attr("stroke", "#fff")
+                    .attr("stroke", "rgba(5,6,13,0.45)")
                     .attr("r", 5)
                     .attr("opacity", 0.7);
             });
@@ -159,7 +168,7 @@ function createHighAIOpportunity() {
             .selectAll("text")
             .attr("font-size", "11px")
             .attr("font-family", "'Merriweather', serif")
-            .attr("fill", "#2c3e50");
+            .attr("fill", opportunityTextMuted);
 
         // Add x-axis label
         g.append("text")
@@ -170,7 +179,7 @@ function createHighAIOpportunity() {
             .attr("font-size", "12px")
             .attr("font-family", "'Merriweather', serif")
             .attr("font-weight", "600")
-            .attr("fill", "#2c3e50")
+            .attr("fill", opportunityTextPrimary)
             .text("Salary");
 
         // Add y-axis
@@ -184,7 +193,7 @@ function createHighAIOpportunity() {
             .selectAll("text")
             .attr("font-size", "11px")
             .attr("font-family", "'Merriweather', serif")
-            .attr("fill", "#2c3e50");
+            .attr("fill", opportunityTextMuted);
 
         g.select(".y-axis").select(".domain")
             .attr("stroke", "none");
@@ -198,7 +207,7 @@ function createHighAIOpportunity() {
             .attr("font-size", "12px")
             .attr("font-family", "'Merriweather', serif")
             .attr("font-weight", "600")
-            .attr("fill", "#2c3e50")
+            .attr("fill", opportunityTextPrimary)
             .text("Opportunity");
 
         // Add title
@@ -209,7 +218,7 @@ function createHighAIOpportunity() {
             .attr("font-size", "16px")
             .attr("font-family", "'Merriweather', serif")
             .attr("font-weight", "600")
-            .attr("fill", "#2c3e50")
+            .attr("fill", opportunityTextPrimary)
             .text("Jobs with High AI Opportunity");
 
         // Add subtitle
@@ -220,7 +229,7 @@ function createHighAIOpportunity() {
             .attr("font-size", "12px")
             .attr("font-family", "'Merriweather', serif")
             .attr("font-weight", "400")
-            .attr("fill", "#2c3e50")
+            .attr("fill", opportunityTextMuted)
             .text("Top 30% of jobs by AI opportunity score (higher score = greater AI transformation potential)");
 
         highAIOpportunityViz = { svg, g, xScale, yScale, circles };

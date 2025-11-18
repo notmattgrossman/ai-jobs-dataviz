@@ -1,17 +1,24 @@
 document.addEventListener("DOMContentLoaded", async function () {
+    const theme = window.aiVizTheme || {};
+    const textPrimary = theme.palette?.textPrimary || "#f6f7ff";
+    const textMuted = theme.palette?.textMuted || "#9da7c2";
+    const surface = theme.palette?.surface || "#0e111f";
+    const borderColor = theme.palette?.border || "rgba(255,255,255,0.08)";
     const tooltip = d3.select("body")
         .append("div")
         .attr("class", "tooltip")
         .style("opacity", 0)
         .style("position", "absolute")
-        .style("background-color", "#2c3e50")
-        .style("color", "#F0EEE6")
-        .style("padding", "4px 8px")
-        .style("border-radius", "3px")
-        .style("font-size", "10px")
+        .style("padding", "6px 10px")
+        .style("border-radius", "8px")
+        .style("font-size", "11px")
         .style("font-family", "'Merriweather', serif")
         .style("pointer-events", "none")
         .style("z-index", "1000");
+
+    if (theme.styleTooltip) {
+        theme.styleTooltip(tooltip);
+    }
 
     const filePromises = [];
     for (let i = 1; i <= 25; i++) {
@@ -72,9 +79,9 @@ document.addEventListener("DOMContentLoaded", async function () {
         .enter()
         .append("path")
         .attr("d", path)
-        .attr("fill", "#eee")
-        .attr("stroke", "#999")
-        .attr("stroke-width", 1);
+        .attr("fill", surface)
+        .attr("stroke", borderColor)
+        .attr("stroke-width", 0.8);
 
     const circleData = [];
     data2024.forEach(row => {
@@ -100,16 +107,23 @@ document.addEventListener("DOMContentLoaded", async function () {
         .domain([0, d3.max(circleData, d => d.size)])
         .range([4, 32]);
 
+    const colorScale = d3.scaleSequential()
+        .domain(d3.extent(circleData, d => d.value))
+        .interpolator(d3.interpolateRgb(
+            theme.palette?.accentSecondary || "#6be2ff",
+            theme.palette?.accent || "#1fb8ff"
+        ));
+
     svg.selectAll("circle")
         .data(circleData)
         .enter()
         .append("circle")
         .attr("transform", d => `translate(${projection(d.coords)})`)
         .attr("r", d => radiusScale(d.size))
-        .attr("fill", "#2d5016")
-        .attr("fill-opacity", 0.6)
-        .attr("stroke", "white")
-        .attr("stroke-width", 0.5)
+        .attr("fill", d => colorScale(d.value))
+        .attr("fill-opacity", 0.85)
+        .attr("stroke", "rgba(5,6,13,0.8)")
+        .attr("stroke-width", 0.8)
         .on("mouseover", function (event, d) {
             tooltip.transition()
                 .duration(200)
@@ -138,6 +152,6 @@ document.addEventListener("DOMContentLoaded", async function () {
         .attr("font-size", "20px")
         .attr("font-family", "'Merriweather', serif")
         .attr("font-weight", "600")
-        .attr("fill", "#2c3e50")
+        .attr("fill", textPrimary)
         .text("Global AI Job Posting Concentration (2024)");
 });

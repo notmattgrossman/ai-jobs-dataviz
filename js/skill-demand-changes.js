@@ -1,5 +1,9 @@
 // AI Skill Demand Changes - Multiple Lines Chart (2017-2025)
 d3.csv("data/4. Economy/Data/fig_4.2.3.csv").then(function(data) {
+    const theme = window.aiVizTheme || {};
+    const textPrimary = theme.palette?.textPrimary || "#f6f7ff";
+    const textMuted = theme.palette?.textMuted || "#9da7c2";
+    const gridColor = theme.gridline || "rgba(255,255,255,0.12)";
     // Parse percentage values and year
     data.forEach(function(d) {
         d.percentage = parseFloat(d["AI job postings (% of all job postings)"].replace("%", ""));
@@ -99,14 +103,16 @@ d3.csv("data/4. Economy/Data/fig_4.2.3.csv").then(function(data) {
         .attr("class", "tooltip")
         .style("opacity", 0)
         .style("position", "absolute")
-        .style("background-color", "#2c3e50")
-        .style("color", "#F0EEE6")
         .style("padding", "8px 12px")
-        .style("border-radius", "4px")
+        .style("border-radius", "8px")
         .style("font-size", "11px")
         .style("font-family", "'Merriweather', serif")
         .style("pointer-events", "none")
         .style("z-index", "1000");
+
+    if (theme.styleTooltip) {
+        theme.styleTooltip(tooltip);
+    }
 
     // Scales
     const xScale = d3.scaleLinear()
@@ -120,18 +126,22 @@ d3.csv("data/4. Economy/Data/fig_4.2.3.csv").then(function(data) {
         .nice();
 
     // Color scale for different skills
+    const palette = (theme.categoricalPalette && theme.categoricalPalette.length >= topSkills.length)
+        ? theme.categoricalPalette.slice(0, topSkills.length)
+        : [
+            "#8fe8ff",
+            "#65d4ff",
+            "#43bbff",
+            "#1f9bff",
+            "#0f7dd6",
+            "#5ab8ff",
+            "#3a9eff",
+            "#1e7edb"
+        ];
+
     const colorScale = d3.scaleOrdinal()
         .domain(topSkills.map(d => d.skill))
-        .range([
-            "#b2182b",  // Red - for high growth
-            "#d6604d",  // Medium red
-            "#f4a582",  // Light red
-            "#2d5016",  // Dark green
-            "#4a7c2a",  // Medium green
-            "#6ba84f",  // Light green
-            "#9b59b6",  // Purple
-            "#3498db"   // Blue
-        ]);
+        .range(palette);
 
     // Line generator
     const line = d3.line()
@@ -212,7 +222,7 @@ d3.csv("data/4. Economy/Data/fig_4.2.3.csv").then(function(data) {
         .attr("x2", xScale(2024))
         .attr("y1", 0)
         .attr("y2", height)
-        .attr("stroke", "#999")
+        .attr("stroke", gridColor)
         .attr("stroke-width", 1)
         .attr("stroke-dasharray", "5,5")
         .attr("opacity", 0.5);
@@ -230,10 +240,10 @@ d3.csv("data/4. Economy/Data/fig_4.2.3.csv").then(function(data) {
     xAxisGroup.selectAll("text")
         .attr("font-size", "11px")
         .attr("font-family", "'Merriweather', serif")
-        .attr("fill", "#2c3e50");
+        .attr("fill", textMuted);
 
     xAxisGroup.selectAll("line")
-        .attr("stroke", "#ccc");
+        .attr("stroke", gridColor);
 
     // Add x-axis label
     g.append("text")
@@ -244,7 +254,7 @@ d3.csv("data/4. Economy/Data/fig_4.2.3.csv").then(function(data) {
         .attr("font-size", "12px")
         .attr("font-family", "'Merriweather', serif")
         .attr("font-weight", "600")
-        .attr("fill", "#2c3e50")
+        .attr("fill", textPrimary)
         .text("Year (2017-2025)");
 
     // Add y-axis
@@ -259,10 +269,10 @@ d3.csv("data/4. Economy/Data/fig_4.2.3.csv").then(function(data) {
     yAxisGroup.selectAll("text")
         .attr("font-size", "11px")
         .attr("font-family", "'Merriweather', serif")
-        .attr("fill", "#2c3e50");
+        .attr("fill", textMuted);
 
     yAxisGroup.selectAll("line")
-        .attr("stroke", "#ccc");
+        .attr("stroke", gridColor);
 
     // Add y-axis label
     g.append("text")
@@ -274,7 +284,7 @@ d3.csv("data/4. Economy/Data/fig_4.2.3.csv").then(function(data) {
         .attr("font-size", "12px")
         .attr("font-family", "'Merriweather', serif")
         .attr("font-weight", "600")
-        .attr("fill", "#2c3e50")
+        .attr("fill", textPrimary)
         .text("Demand Index (0-100)");
 
     // Add title
@@ -285,7 +295,7 @@ d3.csv("data/4. Economy/Data/fig_4.2.3.csv").then(function(data) {
         .attr("font-size", "16px")
         .attr("font-family", "'Merriweather', serif")
         .attr("font-weight", "600")
-        .attr("fill", "#2c3e50")
+        .attr("fill", textPrimary)
         .text("AI Skill Demand Changes (2017-2025)");
 
     // Add subtitle
@@ -296,7 +306,7 @@ d3.csv("data/4. Economy/Data/fig_4.2.3.csv").then(function(data) {
         .attr("font-size", "12px")
         .attr("font-family", "'Merriweather', serif")
         .attr("font-weight", "400")
-        .attr("fill", "#2c3e50")
+        .attr("fill", textMuted)
         .text("Top 8 skills showing demand index trends over time (2025 projected)");
 
     // Add legend
@@ -325,7 +335,7 @@ d3.csv("data/4. Economy/Data/fig_4.2.3.csv").then(function(data) {
         .attr("y", 4)
         .attr("font-size", "11px")
         .attr("font-family", "'Merriweather', serif")
-        .attr("fill", "#2c3e50")
+        .attr("fill", textMuted)
         .text(d => d.skill);
 
     // Add note about projection
@@ -336,7 +346,7 @@ d3.csv("data/4. Economy/Data/fig_4.2.3.csv").then(function(data) {
         .attr("font-size", "10px")
         .attr("font-family", "'Merriweather', serif")
         .attr("font-style", "italic")
-        .attr("fill", "#666")
+        .attr("fill", textMuted)
         .text("Dashed vertical line indicates transition from historical data (2017-2024) to projected data (2025)");
 
 }).catch(function(error) {
