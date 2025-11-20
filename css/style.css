@@ -1,10 +1,10 @@
 :root {
-  --bg: #05060d;
-  --surface: #0e111f;
-  --panel: #13162a;
-  --panel-alt: #1c2140;
-  --text-primary: #f6f7ff;
-  --text-muted: #9da7c2;
+  --bg: #0a0b14;
+  --surface: #121520;
+  --panel: #181b2a;
+  --panel-alt: #1e2235;
+  --text-primary: #f8f9fc;
+  --text-muted: #7b7e87;
   --accent: #1fb8ff;
   --accent-alt: #6be2ff;
   --border: rgba(255, 255, 255, 0.08);
@@ -19,7 +19,7 @@
 
 body {
   background-color: var(--bg);
-  font-family: 'Merriweather', serif;
+  font-family: "Stack Sans Notch", sans-serif;
   line-height: 1.7;
   color: var(--text-muted);
   padding: 2rem;
@@ -32,14 +32,17 @@ div {
 
 h1 {
   color: var(--text-primary);
+  font-family: "Stack Sans Notch", sans-serif;
   font-weight: 700;
   font-size: 2.25rem;
   margin-bottom: 1rem;
   line-height: 1.2;
+  letter-spacing: 0.03em;
 }
 
 h2 {
   color: var(--text-primary);
+  font-family: "Stack Sans Text", sans-serif;
   font-weight: 700;
   font-size: 1.25rem;
   margin-top: 0;
@@ -50,6 +53,7 @@ h2 {
 
 h3 {
   color: var(--text-primary);
+  font-family: "Stack Sans Notch", sans-serif;
   font-weight: 600;
   font-size: 1.125rem;
   margin: 4rem auto 1.5rem;
@@ -74,6 +78,7 @@ p {
   font-size: 1rem;
   line-height: 1.7;
   color: var(--text-muted);
+  font-family: "Stack Sans Text", sans-serif;
 }
 
 ul {
@@ -90,7 +95,7 @@ li {
 }
 
 a {
-  color: var(--accent);
+  color: var(--text-primary);
   text-decoration: none;
   transition: color 0.2s ease, opacity 0.2s ease;
 }
@@ -100,7 +105,7 @@ a:hover {
 }
 
 a:visited {
-  color: var(--accent-alt);
+  color: var(--text-primary);
 }
 
 hr {

@@ -2,13 +2,13 @@
   "use strict";
 
   const palette = {
-    background: "#040714",
-    surface: "#070c1f",
-    panel: "#0c1430",
-    panelRaised: "#111c3f",
-    textPrimary: "#f4f8ff",
-    textMuted: "#9db2d7",
-    axis: "#9db2d7",
+    background: "#0a0b14",
+    surface: "#121520",
+    panel: "#181b2a",
+    panelRaised: "#1e2235",
+    textPrimary: "#f8f9fc",
+    textMuted: "#7b7e87",
+    axis: "#7b7e87",
     accent: "#1fb8ff",
     accentSecondary: "#6be2ff",
     positiveLight: "#a6f0ff",
@@ -22,7 +22,7 @@
     warning: "#facc15",
     border: "rgba(111,168,255,0.18)",
     gridline: "rgba(111,168,255,0.18)",
-    tooltipBg: "#070f25",
+    tooltipBg: "#121520",
     tooltipBorder: "rgba(255,255,255,0.15)",
     shadow: "0 30px 60px rgba(0,0,0,0.55)"
   };
@@ -70,7 +70,8 @@
         selection
           .selectAll("text")
           .attr("fill", palette.axis)
-          .attr("font-family", "'Merriweather', serif");
+          .attr("font-family", "'Stack Sans Notch', serif")
+          .attr("font-weight", "300");
         selection.selectAll("line").attr("stroke", palette.gridline);
         selection.selectAll("path").attr("stroke", palette.gridline);
       },

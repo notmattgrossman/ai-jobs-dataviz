@@ -100,17 +100,42 @@ function createIndustryOutlook(filterState = 'all') {
 
         // Set up dimensions
         const margin = { top: 40, right: 40, bottom: 150, left: 200 };
-        const width = 900 - margin.left - margin.right;
+        const baseWidth = 900;
+        const width = baseWidth - margin.left - margin.right;
         const height = Math.max(400, functions.length * 40) - margin.top - margin.bottom;
+        const svgWidth = baseWidth;
+        const svgHeight = height + margin.top + margin.bottom;
 
         // Create SVG
         const svg = d3.select("#industry-outlook")
             .append("svg")
-            .attr("width", width + margin.left + margin.right)
-            .attr("height", height + margin.top + margin.bottom);
+            .attr("width", "100%")
+            .attr("height", svgHeight)
+            .attr("viewBox", `0 0 ${svgWidth} ${svgHeight}`)
+            .attr("preserveAspectRatio", "xMidYMid meet");
 
         const g = svg.append("g")
             .attr("transform", `translate(${margin.left},${margin.top})`);
+
+        // Create tooltip (reuse if exists, otherwise create new)
+        let tooltip = d3.select("body").select(".tooltip");
+        if (tooltip.empty()) {
+            tooltip = d3.select("body")
+                .append("div")
+                .attr("class", "tooltip")
+                .style("opacity", 0)
+                .style("position", "fixed")
+                .style("padding", "6px 10px")
+                .style("border-radius", "8px")
+                .style("font-size", "11px")
+                .style("font-family", "'Stack Sans Notch', serif")
+                .style("pointer-events", "none")
+                .style("z-index", "1000");
+
+            if (industryTheme.styleTooltip) {
+                industryTheme.styleTooltip(tooltip);
+            }
+        }
 
         // Create stack generator
         const stack = d3.stack()
@@ -155,7 +180,35 @@ function createIndustryOutlook(filterState = 'all') {
             .attr("height", yScale.bandwidth())
             .attr("fill", d => colorScale(d.key))
             .attr("stroke", "rgba(5,6,13,0.45)")
-            .attr("stroke-width", 0.6);
+            .attr("stroke-width", 0.6)
+            .on("mouseover", function(event, d) {
+                const percentage = (d[1] - d[0]) * 100;
+                tooltip.transition()
+                    .duration(200)
+                    .style("opacity", 1);
+                tooltip.html(`${d.data.function}<br/>${d.key}<br/>${percentage.toFixed(1)}%`);
+                
+                d3.select(this)
+                    .attr("stroke-width", 2)
+                    .attr("stroke", industryTextPrimary)
+                    .attr("opacity", 0.9);
+            })
+            .on("mousemove", function(event) {
+                tooltip
+                    .style("left", (event.clientX) + "px")
+                    .style("top", (event.clientY - 80) + "px")
+                    .style("transform", "translateX(-50%)");
+            })
+            .on("mouseout", function() {
+                tooltip.transition()
+                    .duration(500)
+                    .style("opacity", 0);
+                
+                d3.select(this)
+                    .attr("stroke-width", 0.6)
+                    .attr("stroke", "rgba(5,6,13,0.45)")
+                    .attr("opacity", 1);
+            });
 
         // Add function labels
         g.append("g")
@@ -169,9 +222,9 @@ function createIndustryOutlook(filterState = 'all') {
             .attr("text-anchor", "end")
             .attr("alignment-baseline", "middle")
             .attr("font-size", "11px")
-            .attr("font-family", "'Merriweather', serif")
+            .attr("font-family", "'Stack Sans Notch', serif")
             .attr("fill", d => d === "Overall" ? industryTextPrimary : industryTextMuted)
-            .attr("font-weight", d => d === "Overall" ? "bold" : "normal")
+            .attr("font-weight", "300")
             .text(d => d);
 
         // Add x-axis
@@ -186,7 +239,8 @@ function createIndustryOutlook(filterState = 'all') {
 
         xAxisGroup.selectAll("text")
             .attr("font-size", "11px")
-            .attr("font-family", "'Merriweather', serif")
+            .attr("font-family", "'Stack Sans Notch', serif")
+            .attr("font-weight", "300")
             .attr("fill", industryTextMuted);
 
         xAxisGroup.selectAll("line")
@@ -198,8 +252,8 @@ function createIndustryOutlook(filterState = 'all') {
             .attr("y", 25)
             .attr("text-anchor", "middle")
             .attr("font-size", "16px")
-            .attr("font-family", "'Merriweather', serif")
-            .attr("font-weight", "600")
+            .attr("font-family", "'Stack Sans Notch', serif")
+            .attr("font-weight", "300")
             .attr("fill", industryTextPrimary)
             .text("Expected Change in Workforce Size by Function");
 
@@ -247,7 +301,8 @@ function createIndustryOutlook(filterState = 'all') {
             .attr("x", 18)
             .attr("y", 9)
             .attr("font-size", "10px")
-            .attr("font-family", "'Merriweather', serif")
+            .attr("font-family", "'Stack Sans Notch', serif")
+            .attr("font-weight", "300")
             .attr("fill", industryTextMuted)
             .text(d => d);
 
@@ -272,7 +327,8 @@ function createIndustryOutlook(filterState = 'all') {
             .attr("x", 18)
             .attr("y", 9)
             .attr("font-size", "10px")
-            .attr("font-family", "'Merriweather', serif")
+            .attr("font-family", "'Stack Sans Notch', serif")
+            .attr("font-weight", "300")
             .attr("fill", industryTextMuted)
             .text(d => d);
 

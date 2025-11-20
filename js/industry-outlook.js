@@ -109,11 +109,11 @@ d3.csv("data/4. Economy/Data/fig_4.4.12.csv").then(function(data) {
         .append("div")
         .attr("class", "tooltip")
         .style("opacity", 0)
-        .style("position", "absolute")
+        .style("position", "fixed")
         .style("padding", "6px 10px")
         .style("border-radius", "8px")
         .style("font-size", "11px")
-        .style("font-family", "'Merriweather', serif")
+        .style("font-family", "'Stack Sans Notch', serif")
         .style("pointer-events", "none")
         .style("z-index", "1000");
 
@@ -175,8 +175,8 @@ d3.csv("data/4. Economy/Data/fig_4.4.12.csv").then(function(data) {
         .on("mousemove", function(event) {
             // Update tooltip position to follow cursor
             tooltip
-                .style("left", (event.pageX) + "px")
-                .style("top", (event.pageY - 30) + "px") // Position above cursor
+                .style("left", (event.clientX) + "px")
+                .style("top", (event.clientY - 80) + "px") // Position above cursor
                 .style("transform", "translateX(-50%)"); // Center horizontally on cursor
         })
         .on("mouseout", function() {
@@ -197,9 +197,9 @@ d3.csv("data/4. Economy/Data/fig_4.4.12.csv").then(function(data) {
         .attr("text-anchor", "end")
         .attr("alignment-baseline", "middle")
         .attr("font-size", "11px")
-        .attr("font-family", "'Merriweather', serif")
+        .attr("font-family", "'Stack Sans Notch', serif")
         .attr("fill", d => d === "Overall" ? textPrimary : textMuted)
-        .attr("font-weight", d => d === "Overall" ? "bold" : "normal")
+        .attr("font-weight", "300")
         .text(d => d);
 
     // Add x-axis (percentage)
@@ -214,7 +214,8 @@ d3.csv("data/4. Economy/Data/fig_4.4.12.csv").then(function(data) {
 
     xAxisGroup.selectAll("text")
         .attr("font-size", "11px")
-        .attr("font-family", "'Merriweather', serif")
+        .attr("font-family", "'Stack Sans Notch', serif")
+        .attr("font-weight", "300")
         .attr("fill", textMuted);
 
     xAxisGroup.selectAll("line")
@@ -226,8 +227,8 @@ d3.csv("data/4. Economy/Data/fig_4.4.12.csv").then(function(data) {
         .attr("y", 25)
         .attr("text-anchor", "middle")
         .attr("font-size", "16px")
-        .attr("font-family", "'Merriweather', serif")
-        .attr("font-weight", "600")
+        .attr("font-family", "'Stack Sans Notch', serif")
+        .attr("font-weight", "300")
         .attr("fill", textPrimary)
         .text("Expected Change in Workforce Size by Function");
 
@@ -277,7 +278,8 @@ d3.csv("data/4. Economy/Data/fig_4.4.12.csv").then(function(data) {
         .attr("x", 18)
         .attr("y", 9)
         .attr("font-size", "10px")
-        .attr("font-family", "'Merriweather', serif")
+        .attr("font-family", "'Stack Sans Notch', serif")
+        .attr("font-weight", "300")
         .attr("fill", textMuted)
         .text(d => d);
 
@@ -302,7 +304,8 @@ d3.csv("data/4. Economy/Data/fig_4.4.12.csv").then(function(data) {
         .attr("x", 18)
         .attr("y", 9)
         .attr("font-size", "10px")
-        .attr("font-family", "'Merriweather', serif")
+        .attr("font-family", "'Stack Sans Notch', serif")
+        .attr("font-weight", "300")
         .attr("fill", textMuted)
         .text(d => d);
 

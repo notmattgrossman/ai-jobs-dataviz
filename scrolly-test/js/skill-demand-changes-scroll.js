@@ -112,11 +112,11 @@ function createSkillDemandChanges() {
             .append("div")
             .attr("class", "tooltip")
             .style("opacity", 0)
-            .style("position", "absolute")
+            .style("position", "fixed")
             .style("padding", "8px 12px")
             .style("border-radius", "8px")
             .style("font-size", "11px")
-            .style("font-family", "'Merriweather', serif")
+            .style("font-family", "'Stack Sans Notch', serif")
             .style("pointer-events", "none")
             .style("z-index", "1000");
 
@@ -190,8 +190,9 @@ function createSkillDemandChanges() {
                 
                 const yearLabel = point.isProjected ? `${point.year} (Projected)` : point.year;
                 tooltip.html(`${d.skill}<br/>${yearLabel}: ${point.demandIndex.toFixed(1)} index<br/>(${point.percentage.toFixed(2)}% of all jobs)`)
-                    .style("left", (event.pageX + 10) + "px")
-                    .style("top", (event.pageY - 10) + "px");
+                    .style("left", (event.clientX) + "px")
+                    .style("top", (event.clientY - 80) + "px")
+                    .style("transform", "translateX(-50%)");
             })
             .on("mouseout", function(event, d) {
                 d3.select(this)
@@ -246,7 +247,8 @@ function createSkillDemandChanges() {
 
         xAxisGroup.selectAll("text")
             .attr("font-size", "11px")
-            .attr("font-family", "'Merriweather', serif")
+            .attr("font-family", "'Stack Sans Notch', serif")
+            .attr("font-weight", "300")
             .attr("fill", skillTextMuted);
 
         xAxisGroup.selectAll("line")
@@ -259,8 +261,8 @@ function createSkillDemandChanges() {
             .attr("y", height + 50)
             .attr("text-anchor", "middle")
             .attr("font-size", "12px")
-            .attr("font-family", "'Merriweather', serif")
-            .attr("font-weight", "600")
+            .attr("font-family", "'Stack Sans Notch', serif")
+            .attr("font-weight", "300")
             .attr("fill", skillTextPrimary)
             .text("Year (2017-2025)");
 
@@ -275,7 +277,8 @@ function createSkillDemandChanges() {
 
         yAxisGroup.selectAll("text")
             .attr("font-size", "11px")
-            .attr("font-family", "'Merriweather', serif")
+            .attr("font-family", "'Stack Sans Notch', serif")
+            .attr("font-weight", "300")
             .attr("fill", skillTextMuted);
 
         yAxisGroup.selectAll("line")
@@ -289,8 +292,8 @@ function createSkillDemandChanges() {
             .attr("x", -height / 2)
             .attr("text-anchor", "middle")
             .attr("font-size", "12px")
-            .attr("font-family", "'Merriweather', serif")
-            .attr("font-weight", "600")
+            .attr("font-family", "'Stack Sans Notch', serif")
+            .attr("font-weight", "300")
             .attr("fill", skillTextPrimary)
             .text("Demand Index (0-100)");
 
@@ -300,8 +303,8 @@ function createSkillDemandChanges() {
             .attr("y", 30)
             .attr("text-anchor", "middle")
             .attr("font-size", "16px")
-            .attr("font-family", "'Merriweather', serif")
-            .attr("font-weight", "600")
+            .attr("font-family", "'Stack Sans Notch', serif")
+            .attr("font-weight", "300")
             .attr("fill", skillTextPrimary)
             .text("AI Skill Demand Changes (2017-2025)");
 
@@ -311,8 +314,8 @@ function createSkillDemandChanges() {
             .attr("y", 50)
             .attr("text-anchor", "middle")
             .attr("font-size", "12px")
-            .attr("font-family", "'Merriweather', serif")
-            .attr("font-weight", "400")
+            .attr("font-family", "'Stack Sans Notch', serif")
+            .attr("font-weight", "300")
             .attr("fill", skillTextMuted)
             .text("Top 8 skills showing demand index trends over time (2025 projected)");
 
@@ -341,7 +344,8 @@ function createSkillDemandChanges() {
             .attr("x", 25)
             .attr("y", 4)
             .attr("font-size", "11px")
-            .attr("font-family", "'Merriweather', serif")
+            .attr("font-family", "'Stack Sans Notch', serif")
+            .attr("font-weight", "300")
             .attr("fill", skillTextMuted)
             .text(d => d.skill);
 
@@ -351,7 +355,7 @@ function createSkillDemandChanges() {
             .attr("y", height + margin.top + 70)
             .attr("text-anchor", "middle")
             .attr("font-size", "10px")
-            .attr("font-family", "'Merriweather', serif")
+            .attr("font-family", "'Stack Sans Notch', serif")
             .attr("font-style", "italic")
             .attr("fill", skillTextMuted)
             .text("Dashed vertical line indicates transition from historical data (2017-2024) to projected data (2025)");

@@ -14,11 +14,11 @@ async function createGlobalMap() {
         .append("div")
         .attr("class", "tooltip")
         .style("opacity", 0)
-        .style("position", "absolute")
+        .style("position", "fixed")
         .style("padding", "6px 10px")
         .style("border-radius", "8px")
         .style("font-size", "11px")
-        .style("font-family", "'Merriweather', serif")
+        .style("font-family", "'Stack Sans Notch', serif")
         .style("pointer-events", "none")
         .style("z-index", "1000");
 
@@ -118,8 +118,8 @@ async function createGlobalMap() {
         const circleColor = d3.scaleSequential()
             .domain(d3.extent(circleData, d => d.value))
             .interpolator(d3.interpolateRgb(
-                globalMapTheme.palette?.accentSecondary || "#6be2ff",
-                globalMapTheme.palette?.accent || "#1fb8ff"
+                globalMapTheme.palette?.divergingPositive || globalMapTheme.palette?.accentSecondary || "#43cbff",
+                globalMapTheme.palette?.divergingNegative || globalMapTheme.palette?.negative || "#ff5c8d"
             ));
 
         svg.selectAll("circle")
@@ -143,8 +143,8 @@ async function createGlobalMap() {
             })
             .on("mousemove", function (event, d) {
                 tooltip
-                    .style("left", (event.pageX) + "px")
-                    .style("top", (event.pageY - 30) + "px")
+                    .style("left", (event.clientX) + "px")
+                    .style("top", (event.clientY - 80) + "px")
                     .style("transform", "translateX(-50%)");
             })
             .on("mouseout", function () {
@@ -158,8 +158,8 @@ async function createGlobalMap() {
             .attr("y", 30)
             .attr("text-anchor", "middle")
             .attr("font-size", "20px")
-            .attr("font-family", "'Merriweather', serif")
-            .attr("font-weight", "600")
+            .attr("font-family", "'Stack Sans Notch', serif")
+            .attr("font-weight", "300")
             .attr("fill", globalTextPrimary)
             .text("Global AI Job Posting Concentration (2024)");
 

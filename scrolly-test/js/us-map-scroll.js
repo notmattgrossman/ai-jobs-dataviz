@@ -15,11 +15,11 @@ async function createUSMap() {
         .append("div")
         .attr("class", "tooltip")
         .style("opacity", 0)
-        .style("position", "absolute")
+        .style("position", "fixed")
         .style("padding", "6px 10px")
         .style("border-radius", "8px")
         .style("font-size", "11px")
-        .style("font-family", "'Merriweather', serif")
+        .style("font-family", "'Stack Sans Notch', serif")
         .style("pointer-events", "none")
         .style("z-index", "1000");
 
@@ -48,8 +48,8 @@ async function createUSMap() {
             .attr("y", 30)
             .attr("text-anchor", "middle")
             .attr("font-size", "20px")
-            .attr("font-family", "'Merriweather', serif")
-            .attr("font-weight", "600")
+            .attr("font-family", "'Stack Sans Notch', serif")
+            .attr("font-weight", "300")
             .attr("fill", usTextPrimary)
             .text("US AI Job Posting Distribution by State (2024)");
 
@@ -85,11 +85,11 @@ async function createUSMap() {
         const states = topojson.feature(us, us.objects.states).features;
 
         const colorScale = d3.scaleSequential()
+            .domain([0, d3.max(Array.from(dataByState.values()))])
             .interpolator(d3.interpolateRgb(
-                usMapTheme.palette?.accentSecondary || "#6be2ff",
-                usMapTheme.palette?.accent || "#1fb8ff"
-            ))
-            .domain([0, d3.max(Array.from(dataByState.values()))]);
+                usMapTheme.palette?.divergingPositive || usMapTheme.palette?.accentSecondary || "#43cbff",
+                usMapTheme.palette?.divergingNegative || usMapTheme.palette?.negative || "#ff5c8d"
+            ));
 
         svg.selectAll("path")
             .data(states)
@@ -121,8 +121,8 @@ async function createUSMap() {
             })
             .on("mousemove", function (event) {
                 tooltip
-                    .style("left", (event.pageX) + "px")
-                    .style("top", (event.pageY - 30) + "px")
+                    .style("left", (event.clientX) + "px")
+                    .style("top", (event.clientY - 80) + "px")
                     .style("transform", "translateX(-50%)");
             })
             .on("mouseout", function () {
@@ -134,7 +134,7 @@ async function createUSMap() {
         const legendWidth = 300;
         const legendHeight = 10;
         const legendX = width - legendWidth - 50;
-        const legendY = height - 60;
+        const legendY = height - 30;
 
         const legendScale = d3.scaleLinear()
             .domain(colorScale.domain())
@@ -167,7 +167,7 @@ async function createUSMap() {
             .attr("transform", `translate(0, ${legendHeight})`)
             .call(legendAxis)
             .selectAll("text")
-            .attr("font-family", "'Merriweather', serif")
+            .attr("font-family", "'Stack Sans Notch', serif")
             .attr("font-size", "10px")
             .attr("fill", usTextMuted);
 
@@ -175,8 +175,9 @@ async function createUSMap() {
             .attr("x", legendWidth / 2)
             .attr("y", -5)
             .attr("text-anchor", "middle")
-            .attr("font-family", "'Merriweather', serif")
+            .attr("font-family", "'Stack Sans Notch', serif")
             .attr("font-size", "12px")
+            .attr("font-weight", "300")
             .attr("fill", usTextPrimary)
             .text("% of US AI Job Postings");
 

@@ -176,9 +176,9 @@ function createBubbleScatterViz() {
             .attr("text-anchor", "middle")
             .attr("alignment-baseline", "middle")
             .attr("font-size", "12px")
-            .attr("font-family", "'Merriweather', serif")
+            .attr("font-family", "'Stack Sans Notch', serif")
             .attr("fill", bubbleTextPrimary)
-            .attr("font-weight", "700")
+            .attr("font-weight", "300")
             .text(d => d.Title)
             .style("pointer-events", "none")
             .attr("opacity", 0)
@@ -223,7 +223,8 @@ function createBubbleScatterViz() {
 
         xAxisGroup.selectAll("text")
             .attr("font-size", "11px")
-            .attr("font-family", "'Merriweather', serif")
+            .attr("font-family", "'Stack Sans Notch', serif")
+            .attr("font-weight", "300")
             .attr("fill", bubbleTextMuted);
 
         const yAxisGroup = g.append("g")
@@ -233,7 +234,8 @@ function createBubbleScatterViz() {
 
         yAxisGroup.selectAll("text")
             .attr("font-size", "11px")
-            .attr("font-family", "'Merriweather', serif")
+            .attr("font-family", "'Stack Sans Notch', serif")
+            .attr("font-weight", "300")
             .attr("fill", bubbleTextMuted);
 
         yAxisGroup.select(".domain")
@@ -252,16 +254,16 @@ function createBubbleScatterViz() {
             .attr("y", margin.top + height + 40)
             .attr("text-anchor", "middle")
             .attr("font-size", "12px")
-            .attr("font-family", "'Merriweather', serif")
+            .attr("font-family", "'Stack Sans Notch', serif")
             .attr("fill", bubbleTextPrimary)
             .attr("opacity", 0);
         
         xAxisLabel.append("tspan")
-            .attr("font-weight", "600")
+            .attr("font-weight", "300")
             .text("Risk Score");
         
         xAxisLabel.append("tspan")
-            .attr("font-weight", "400")
+            .attr("font-weight", "300")
             .attr("font-style", "italic")
             .attr("fill", bubbleTextMuted)
             .text(" (Higher risk score means more vulnerable)");
@@ -273,8 +275,8 @@ function createBubbleScatterViz() {
             .attr("x", -height / 2)
             .attr("text-anchor", "middle")
             .attr("font-size", "12px")
-            .attr("font-family", "'Merriweather', serif")
-            .attr("font-weight", "600")
+            .attr("font-family", "'Stack Sans Notch', serif")
+            .attr("font-weight", "300")
             .attr("fill", bubbleTextPrimary)
             .attr("opacity", 0)
             .text("Median Salary");
@@ -285,8 +287,8 @@ function createBubbleScatterViz() {
             .attr("y", 30)
             .attr("text-anchor", "middle")
             .attr("font-size", "16px")
-            .attr("font-family", "'Merriweather', serif")
-            .attr("font-weight", "600")
+            .attr("font-family", "'Stack Sans Notch', serif")
+            .attr("font-weight", "300")
             .attr("fill", bubbleTextPrimary)
             .text("Job Vulnerability and Salary");
 

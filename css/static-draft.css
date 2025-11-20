@@ -1,10 +1,10 @@
 :root {
-  --bg: #05060d;
-  --surface: #0e111f;
-  --panel: #13162a;
-  --panel-raised: #1c2140;
-  --text-primary: #f6f7ff;
-  --text-muted: #9da7c2;
+  --bg: #0a0b14;
+  --surface: #121520;
+  --panel: #181b2a;
+  --panel-raised: #1e2235;
+  --text-primary: #f8f9fc;
+  --text-muted: #7b7e87;
   --accent: #1fb8ff;
   --accent-2: #6be2ff;
   --border: rgba(31, 184, 255, 0.18);
@@ -20,7 +20,7 @@
 
 body {
   background-color: var(--bg);
-  font-family: 'Merriweather', serif;
+  font-family: "Stack Sans Notch", sans-serif;
   line-height: 1.7;
   color: var(--text-muted);
   padding: 2rem;
@@ -31,26 +31,40 @@ h1 {
   max-width: 900px;
   margin: 0 auto 1rem;
   color: var(--text-primary);
+  font-family: "Stack Sans Notch", sans-serif;
   font-weight: 700;
   font-size: 2.5rem;
   line-height: 1.2;
-  letter-spacing: -0.02em;
+  letter-spacing: 0.03em;
 }
 
 h2 {
   max-width: 900px;
-  margin: 0 auto 4rem;
+  margin: 0 auto 2rem;
   color: var(--text-muted);
+  font-family: "Stack Sans Text", sans-serif;
   font-weight: 400;
   font-size: 1.35rem;
   line-height: 1.5;
   font-style: italic;
 }
 
+.authors {
+  max-width: 900px;
+  margin: 0 auto 4rem;
+  color: var(--text-muted);
+  font-family: "Stack Sans Text", sans-serif;
+  font-size: 0.9375rem;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  text-align: center;
+}
+
 h3 {
   max-width: 900px;
   margin: 4rem auto 1.5rem;
   color: var(--text-primary);
+  font-family: "Stack Sans Notch", sans-serif;
   font-weight: 600;
   font-size: 1.125rem;
   line-height: 1.6;
@@ -75,11 +89,12 @@ p {
   font-size: 1rem;
   line-height: 1.7;
   color: var(--text-muted);
+  font-family: "Stack Sans Text", sans-serif;
 }
 
 a {
   text-decoration: none;
-  color: var(--accent);
+  color: var(--text-primary);
   transition: color 0.2s ease, opacity 0.2s ease;
 }
 
@@ -88,7 +103,7 @@ a:hover {
 }
 
 a:visited {
-  color: var(--accent-2);
+  color: var(--text-primary);
 }
 
 .viz-block {
@@ -113,4 +128,5 @@ footer p {
   font-size: 0.875rem;
   color: var(--text-muted);
   margin-bottom: 0;
+  font-family: "Stack Sans Text", sans-serif;
 }

@@ -45,11 +45,11 @@ d3.csv("data/4. Economy/Data/fig_4.2.25.csv").then(function(data) {
         .append("div")
         .attr("class", "tooltip")
         .style("opacity", 0)
-        .style("position", "absolute")
+        .style("position", "fixed")
         .style("padding", "6px 10px")
         .style("border-radius", "8px")
         .style("font-size", "11px")
-        .style("font-family", "'Merriweather', serif")
+        .style("font-family", "'Stack Sans Notch', serif")
         .style("pointer-events", "none")
         .style("z-index", "1000");
 
@@ -127,8 +127,8 @@ d3.csv("data/4. Economy/Data/fig_4.2.25.csv").then(function(data) {
         .on("mousemove", function(event) {
             // Position tooltip above cursor, centered horizontally
             tooltip
-                .style("left", (event.pageX) + "px")
-                .style("top", (event.pageY - 60) + "px")
+                .style("left", (event.clientX) + "px")
+                .style("top", (event.clientY - 80) + "px")
                 .style("transform", "translateX(-50%)");
         })
         .on("mouseout", function() {
@@ -155,7 +155,8 @@ d3.csv("data/4. Economy/Data/fig_4.2.25.csv").then(function(data) {
         .call(xAxis)
         .selectAll("text")
         .attr("font-size", "11px")
-        .attr("font-family", "'Merriweather', serif")
+        .attr("font-family", "'Stack Sans Notch', serif")
+        .attr("font-weight", "300")
         .attr("fill", textMuted);
 
     // Add x-axis label
@@ -165,8 +166,8 @@ d3.csv("data/4. Economy/Data/fig_4.2.25.csv").then(function(data) {
         .attr("y", height + 50)
         .attr("text-anchor", "middle")
         .attr("font-size", "12px")
-        .attr("font-family", "'Merriweather', serif")
-        .attr("font-weight", "600")
+        .attr("font-family", "'Stack Sans Notch', serif")
+        .attr("font-weight", "300")
         .attr("fill", textPrimary)
         .text("Salary");
 
@@ -180,7 +181,8 @@ d3.csv("data/4. Economy/Data/fig_4.2.25.csv").then(function(data) {
         .call(yAxis)
         .selectAll("text")
         .attr("font-size", "11px")
-        .attr("font-family", "'Merriweather', serif")
+        .attr("font-family", "'Stack Sans Notch', serif")
+        .attr("font-weight", "300")
         .attr("fill", textMuted);
 
     // Hide y-axis domain line to prevent overlap with topmost grid line
@@ -194,8 +196,8 @@ d3.csv("data/4. Economy/Data/fig_4.2.25.csv").then(function(data) {
         .attr("x", -height / 2)
         .attr("text-anchor", "middle")
         .attr("font-size", "12px")
-        .attr("font-family", "'Merriweather', serif")
-        .attr("font-weight", "600")
+        .attr("font-family", "'Stack Sans Notch', serif")
+        .attr("font-weight", "300")
         .attr("fill", textPrimary)
         .text("Opportunity");
 
@@ -205,8 +207,8 @@ d3.csv("data/4. Economy/Data/fig_4.2.25.csv").then(function(data) {
         .attr("y", 30)
         .attr("text-anchor", "middle")
         .attr("font-size", "16px")
-        .attr("font-family", "'Merriweather', serif")
-        .attr("font-weight", "600")
+        .attr("font-family", "'Stack Sans Notch', serif")
+        .attr("font-weight", "300")
         .attr("fill", textPrimary)
         .text("Jobs with High AI Opportunity");
 
@@ -216,8 +218,8 @@ d3.csv("data/4. Economy/Data/fig_4.2.25.csv").then(function(data) {
         .attr("y", 50)
         .attr("text-anchor", "middle")
         .attr("font-size", "12px")
-        .attr("font-family", "'Merriweather', serif")
-        .attr("font-weight", "400")
+        .attr("font-family", "'Stack Sans Notch', serif")
+        .attr("font-weight", "300")
         .attr("fill", textMuted)
         .text("Top 30% of jobs by AI opportunity score (higher score = greater AI transformation potential)");
 

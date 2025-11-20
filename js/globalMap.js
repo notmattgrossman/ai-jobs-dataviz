@@ -8,11 +8,11 @@ document.addEventListener("DOMContentLoaded", async function () {
         .append("div")
         .attr("class", "tooltip")
         .style("opacity", 0)
-        .style("position", "absolute")
+        .style("position", "fixed")
         .style("padding", "6px 10px")
         .style("border-radius", "8px")
         .style("font-size", "11px")
-        .style("font-family", "'Merriweather', serif")
+        .style("font-family", "'Stack Sans Notch', serif")
         .style("pointer-events", "none")
         .style("z-index", "1000");
 
@@ -135,8 +135,8 @@ document.addEventListener("DOMContentLoaded", async function () {
         })
         .on("mousemove", function (event, d) {
             tooltip
-                .style("left", (event.pageX) + "px")
-                .style("top", (event.pageY - 30) + "px")
+                .style("left", (event.clientX) + "px")
+                .style("top", (event.clientY - 80) + "px")
                 .style("transform", "translateX(-50%)");
         })
         .on("mouseout", function () {
@@ -150,8 +150,8 @@ document.addEventListener("DOMContentLoaded", async function () {
         .attr("y", 30)
         .attr("text-anchor", "middle")
         .attr("font-size", "20px")
-        .attr("font-family", "'Merriweather', serif")
-        .attr("font-weight", "600")
+        .attr("font-family", "'Stack Sans Notch', serif")
+        .attr("font-weight", "300")
         .attr("fill", textPrimary)
         .text("Global AI Job Posting Concentration (2024)");
 });
