@@ -27,7 +27,9 @@ document.addEventListener("DOMContentLoaded", async function () {
     const rawData = await Promise.all(filePromises);
     const allData = rawData.filter(d => d).flat();
 
-    const data2024 = allData.filter(d => d.Year === "2024");
+    // Years with data (based on the data structure)
+    const availableYears = ["2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024"];
+    let currentYearIndex = availableYears.length - 1; // Start at 2024
 
     const width = 1200, height = 700;
     const margin = { top: 60, right: 20, bottom: 40, left: 20 };
@@ -50,7 +52,8 @@ document.addEventListener("DOMContentLoaded", async function () {
         "United Kingdom": 826, "Ireland": 372, "France": 250, "Spain": 724, "Portugal": 620, "Germany": 276,
         "Netherlands": 528, "Belgium": 56, "Luxembourg": 442, "Switzerland": 756, "Austria": 40, "Sweden": 752,
         "Poland": 616, "Czechia": 203, "Czech Republic": 203, "Italy": 380, "China": 156, "Japan": 392,
-        "South Korea": 410, "India": 356, "Australia": 36, "Singapore": 702, "Hong Kong": 344
+        "South Korea": 410, "India": 356, "Australia": 36, "Singapore": 702, "Hong Kong": 344,
+        "United Arab Emirates": 784, "UAE": 784, "Croatia": 191, "New Zealand": 554
     };
 
     // made circle size proportional via thier percent to population since total job market should be proportional to population
@@ -59,16 +62,20 @@ document.addEventListener("DOMContentLoaded", async function () {
         "United Kingdom": 67, "Ireland": 5, "France": 68, "Spain": 48, "Portugal": 10, "Germany": 84,
         "Netherlands": 17, "Belgium": 12, "Luxembourg": 0.65, "Switzerland": 9, "Austria": 9, "Sweden": 10,
         "Poland": 38, "Czechia": 10.5, "Czech Republic": 10.5, "Italy": 59, "China": 1425, "Japan": 125,
-        "South Korea": 52, "India": 1428, "Australia": 26, "Singapore": 6, "Hong Kong": 7.5
+        "South Korea": 52, "India": 1428, "Australia": 26, "Singapore": 6, "Hong Kong": 7.5,
+        "United Arab Emirates": 9.9, "UAE": 9.9, "Croatia": 3.9, "New Zealand": 5.1
     };
 
-    // countries with territories
+
     const manualCoords = {
-        250: [2.5, 46.5],    // France
-        826: [-2, 54],       // UK
-        528: [5.5, 52.3],    // Netherlands
-        620: [-8, 39.5],     // Portugal
-        724: [-4, 40]        // Spain
+        250: [2.5, 46.5],     // France
+        826: [-2, 54],         // UK
+        528: [5.5, 52.3],      // Netherlands
+        620: [-8, 39.5],       // Portugal
+        724: [-4, 40],         // Spain
+        344: [114.1694, 22.3193],  // Hong Kong
+        702: [103.8198, 1.3521],   // Singapore
+        784: [54.3773, 24.4539]    // United Arab Emirates
     };
 
     const world = await d3.json("topojson/world-110m.json");
@@ -83,40 +90,77 @@ document.addEventListener("DOMContentLoaded", async function () {
         .attr("stroke", borderColor)
         .attr("stroke-width", 0.8);
 
-    const circleData = [];
-    data2024.forEach(row => {
-        const country = row["Geographic area"]?.trim();
-        const percent = parseFloat(row["AI job postings (% of all job postings)"]?.replace("%", ""));
-        const id = countryId[country];
-        const population = countrypopulation[country];
+    // Add title that will update with year
+    const title = svg.append("text")
+        .attr("x", width / 2)
+        .attr("y", 30)
+        .attr("text-anchor", "middle")
+        .attr("font-size", "20px")
+        .attr("font-family", "'Stack Sans Notch', serif")
+        .attr("font-weight", "300")
+        .attr("fill", textPrimary)
+        .text(`Global AI Job Posting Concentration (${availableYears[currentYearIndex]})`);
 
-        if (id && population && !isNaN(percent)) {
-            const feature = countries.find(f => f.id === id);
-            if (feature) {
-                circleData.push({
-                    country: country,
-                    value: percent,
-                    size: percent * population,
-                    coords: manualCoords[id] || d3.geoCentroid(feature)
-                });
+    // Function to prepare data for a specific year
+    function getCircleDataForYear(year) {
+        const yearData = allData.filter(d => d.Year === year);
+        const circleData = [];
+
+        yearData.forEach(row => {
+            let country = row["Geographic area"]?.trim();
+            const percent = parseFloat(row["AI job postings (% of all job postings)"]?.replace("%", ""));
+            const id = countryId[country];
+            const population = countrypopulation[country];
+
+            if (id && population && !isNaN(percent)) {
+                // For Hong Kong, Singapore, and UAE, use manual coords directly
+                if (country === "Hong Kong" || country === "Singapore" || country === "United Arab Emirates") {
+                    circleData.push({
+                        country: country,
+                        value: percent,
+                        size: percent * population,
+                        coords: manualCoords[id],
+                        id: `${country}-${year}`
+                    });
+                } else {
+                    const feature = countries.find(f => f.id === id);
+                    if (feature) {
+                        circleData.push({
+                            country: country,
+                            value: percent,
+                            size: percent * population,
+                            coords: manualCoords[id] || d3.geoCentroid(feature),
+                            id: `${country}-${year}`
+                        });
+                    }
+                }
             }
-        }
+        });
+        return circleData;
+    }
+
+    // Get all data across all years to establish consistent scales
+    const allCircleData = [];
+    availableYears.forEach(year => {
+        allCircleData.push(...getCircleDataForYear(year));
     });
 
     const radiusScale = d3.scaleSqrt()
-        .domain([0, d3.max(circleData, d => d.size)])
+        .domain([0, d3.max(allCircleData, d => d.size)])
         .range([4, 32]);
 
     const colorScale = d3.scaleSequential()
-        .domain(d3.extent(circleData, d => d.value))
+        .domain(d3.extent(allCircleData, d => d.value))
         .interpolator(d3.interpolateRgb(
             theme.palette?.accentSecondary || "#6be2ff",
             theme.palette?.accent || "#1fb8ff"
         ));
 
-    svg.selectAll("circle")
-        .data(circleData)
-        .enter()
+    // Initial render with current year
+    let circles = svg.selectAll("circle")
+        .data(getCircleDataForYear(availableYears[currentYearIndex]), d => d.country);
+
+    circles.enter()
         .append("circle")
         .attr("transform", d => `translate(${projection(d.coords)})`)
         .attr("r", d => radiusScale(d.size))
@@ -144,6 +188,98 @@ document.addEventListener("DOMContentLoaded", async function () {
                 .duration(500)
                 .style("opacity", 0);
         });
+
+    // Function to update visualization for a specific year
+    function updateYear(yearIndex) {
+        currentYearIndex = yearIndex;
+        const year = availableYears[yearIndex];
+        const newData = getCircleDataForYear(year);
+
+        // Update title
+        title.transition()
+            .duration(600)
+            .style("opacity", 0)
+            .transition()
+            .duration(0)
+            .text(`Global AI Job Posting Concentration (${year})`)
+            .transition()
+            .duration(600)
+            .style("opacity", 1);
+
+        // Update circles
+        circles = svg.selectAll("circle")
+            .data(newData, d => d.country);
+
+        // Enter new circles
+        circles.enter()
+            .append("circle")
+            .attr("transform", d => `translate(${projection(d.coords)})`)
+            .attr("r", 0)
+            .attr("fill", d => colorScale(d.value))
+            .attr("fill-opacity", 0)
+            .attr("stroke", "rgba(5,6,13,0.8)")
+            .attr("stroke-width", 0.8)
+            .on("mouseover", function (event, d) {
+                tooltip.transition()
+                    .duration(200)
+                    .style("opacity", 1);
+                tooltip.html(
+                    `${d.country}<br/>` +
+                    `${d.value}% of all job postings are AI-related`
+                );
+            })
+            .on("mousemove", function (event, d) {
+                tooltip
+                    .style("left", (event.clientX) + "px")
+                    .style("top", (event.clientY - 80) + "px")
+                    .style("transform", "translateX(-50%)");
+            })
+            .on("mouseout", function () {
+                tooltip.transition()
+                    .duration(500)
+                    .style("opacity", 0);
+            })
+            .transition()
+            .duration(800)
+            .attr("r", d => radiusScale(d.size))
+            .attr("fill-opacity", 0.85);
+
+        // Update existing circles
+        circles.transition()
+            .duration(800)
+            .attr("r", d => radiusScale(d.size))
+            .attr("fill", d => colorScale(d.value))
+            .attr("fill-opacity", 0.85);
+
+        // Exit old circles
+        circles.exit()
+            .transition()
+            .duration(800)
+            .attr("r", 0)
+            .attr("fill-opacity", 0)
+            .remove();
+    }
+
+    // Scroll-based year progression
+    let scrollTimeout;
+    window.addEventListener("scroll", function () {
+        clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(() => {
+            const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrollPosition = window.scrollY;
+            const scrollPercent = scrollPosition / scrollHeight;
+
+            // Map scroll percentage to year index
+            const targetYearIndex = Math.min(
+                availableYears.length - 1,
+                Math.floor(scrollPercent * availableYears.length * 2) // Multiply by 2 to make it progress faster
+            );
+
+            if (targetYearIndex !== currentYearIndex && targetYearIndex >= 0) {
+                updateYear(targetYearIndex);
+            }
+        }, 100);
+    });
 
     svg.append("text")
         .attr("x", width / 2)

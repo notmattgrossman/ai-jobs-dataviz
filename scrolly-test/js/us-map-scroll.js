@@ -1,4 +1,3 @@
-// US Map Visualization - Scroll-Driven Version
 let usMapViz = null;
 let usMapData = null;
 const usMapTheme = window.aiVizTheme || {};
@@ -8,7 +7,6 @@ const usSurface = usMapTheme.palette?.surface || "#0e111f";
 const usBorder = usMapTheme.palette?.border || "rgba(255,255,255,0.08)";
 
 async function createUSMap() {
-    // Clear existing visualization
     d3.select("#us-map").selectAll("*").remove();
 
     const tooltip = d3.select("body")
@@ -28,7 +26,6 @@ async function createUSMap() {
     }
 
     try {
-        // Load data
         if (!usMapData) {
             usMapData = await d3.csv("data/Data/fig_4.2.10.csv");
         }
@@ -91,10 +88,11 @@ async function createUSMap() {
                 usMapTheme.palette?.divergingNegative || usMapTheme.palette?.negative || "#ff5c8d"
             ));
 
-        svg.selectAll("path")
+        svg.selectAll("path.state-fill")
             .data(states)
             .enter()
             .append("path")
+            .attr("class", "state-fill")
             .attr("d", path)
             .attr("fill", d => {
                 const stateName = d.properties.name;
@@ -108,7 +106,6 @@ async function createUSMap() {
                 const stateName = d.properties.name;
                 const stateCode = stateNameToCode[stateName];
                 const value = dataByState.get(stateCode);
-
                 if (value) {
                     tooltip.transition()
                         .duration(200)
@@ -119,7 +116,7 @@ async function createUSMap() {
                     );
                 }
             })
-            .on("mousemove", function (event) {
+            .on("mousemove", function (event, d) {
                 tooltip
                     .style("left", (event.clientX) + "px")
                     .style("top", (event.clientY - 80) + "px")
@@ -131,22 +128,36 @@ async function createUSMap() {
                     .style("opacity", 0);
             });
 
-        const legendWidth = 300;
-        const legendHeight = 10;
-        const legendX = width - legendWidth - 50;
-        const legendY = height - 30;
+        svg.selectAll("path.state-outline")
+            .data(states)
+            .enter()
+            .append("path")
+            .attr("class", "state-outline")
+            .attr("d", path)
+            .attr("fill", "none")
+            .attr("stroke", usTextPrimary)
+            .attr("stroke-width", 1.6);
+
+        const legendWidth = 24;
+        const legendHeight = 400;
+        const legendX = width - legendWidth - 60;
+        const legendY = height - legendHeight - 40;
 
         const legendScale = d3.scaleLinear()
             .domain(colorScale.domain())
-            .range([0, legendWidth]);
+            .range([legendHeight, 0]);
 
-        const legendAxis = d3.axisBottom(legendScale)
+        const legendAxis = d3.axisLeft(legendScale)
             .ticks(5)
             .tickFormat(d => d.toFixed(1) + "%");
 
         const defs = svg.append("defs");
         const linearGradient = defs.append("linearGradient")
-            .attr("id", "legend-gradient");
+            .attr("id", "legend-gradient-vertical")
+            .attr("x1", "0%")
+            .attr("y1", "100%")
+            .attr("x2", "0%")
+            .attr("y2", "0%");
 
         linearGradient.selectAll("stop")
             .data(d3.range(0, 1.1, 0.1))
@@ -161,12 +172,12 @@ async function createUSMap() {
         legend.append("rect")
             .attr("width", legendWidth)
             .attr("height", legendHeight)
-            .style("fill", "url(#legend-gradient)");
+            .style("fill", "url(#legend-gradient-vertical)");
 
         legend.append("g")
-            .attr("transform", `translate(0, ${legendHeight})`)
             .call(legendAxis)
             .selectAll("text")
+            .style("font-size", "16px")
             .attr("font-family", "'Stack Sans Notch', serif")
             .attr("font-size", "10px")
             .attr("fill", usTextMuted);
@@ -187,8 +198,7 @@ async function createUSMap() {
     }
 }
 
-// Initialize on load
-$(document).ready(function() {
+$(document).ready(function () {
     setTimeout(createUSMap, 500);
 });
 

@@ -1,17 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Scroll-Driven Narrative</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Stack+Sans+Notch:wght@200..700&family=Stack+Sans+Text:wght@200..700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Stack+Sans+Notch:wght@200..700&family=Stack+Sans+Text:wght@200..700&display=swap"
+        rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/styles.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery-fixto@0.0.1/jquery.fixto.min.js"></script>
 </head>
+
 <body>
     <div class="header">
         <h1>How AI is Reshaping<br>the Job Market Around Itself</h1>
@@ -26,63 +30,69 @@
         </div>
 
         <div class="container">
-        <!-- Left Column: Visualizations (75%) -->
-        <div class="viz-column">
-            <!-- Section 1: Industry Outlook -->
-            <div class="scroll-section" id="section-1" style="height: 3800px;">
-                <div class="sticky-viz" id="industry-outlook-container">
-                    <div id="industry-outlook"></div>
+            <!-- Left Column: Visualizations (75%) -->
+            <div class="viz-column">
+                <!-- Section 1: Industry Outlook -->
+                <div class="scroll-section" id="section-1" style="height: 3800px;">
+                    <div class="sticky-viz" id="industry-outlook-container">
+                        <div id="industry-outlook"></div>
+                    </div>
+                </div>
+
+                <!-- Section 2: Tech Job Vulnerability (Bubble) -->
+                <div class="scroll-section" id="section-2" style="height: 3000px;">
+                    <div class="sticky-viz" id="tech-job-vulnerability-container">
+                        <div id="tech-job-vulnerability"></div>
+                    </div>
+                </div>
+
+                <!-- Section 3: Tech Job Vulnerability Scatter -->
+                <div class="scroll-section" id="section-3" style="height: 3000px;">
+                    <div class="sticky-viz" id="tech-job-vulnerability-scatter-container">
+                        <div id="tech-job-vulnerability-scatter"></div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Section 2: Tech Job Vulnerability (Bubble) -->
-            <div class="scroll-section" id="section-2" style="height: 3000px;">
-                <div class="sticky-viz" id="tech-job-vulnerability-container">
-                    <div id="tech-job-vulnerability"></div>
+            <!-- Right Column: Text (25%) - Static text sections that scroll naturally -->
+            <div class="text-column">
+                <!-- Text Section 1: Industry Outlook -->
+                <div class="text-section" style="height: 3800px;">
+                    <div class="text-section-content" style="margin-top: calc(800px - 50vh);">
+                        <p>A generation of college students in America were told a <a
+                                href="https://www.nytimes.com/2025/09/29/podcasts/the-daily/big-tech-told-kids-to-code-the-jobs-didnt-follow.html"
+                                target="_blank">simple story</a>: go to college, learn to code, and graduate into a job
+                            with a six-figure
+                            salary, private chef lunches, and massages at work. For two decades, this was the case.</p>
+                        <p>Now, as the AI wave just starts to crash onto the technology industry, that story is
+                            beginning to crack.</p>
+                        <p>When surveyed, professionals across industries reported their anticipated changes in
+                            workforce size. The most
+                            optimistic response came from the IT sector and the most pessimistic was from HR.</p>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Section 3: Tech Job Vulnerability Scatter -->
-            <div class="scroll-section" id="section-3" style="height: 3000px;">
-                <div class="sticky-viz" id="tech-job-vulnerability-scatter-container">
-                    <div id="tech-job-vulnerability-scatter"></div>
+                <!-- Text Section 2: Tech Job Vulnerability -->
+                <div class="text-section" style="height: 3000px;">
+                    <div class="text-section-content">
+                        <p>While the IT sector is most optimisitc, that optimism is not evenly distributed. Based on
+                            vulnerability scores,
+                            many jobs in the IT sector are at high risk of being replaced by AI.</p>
+                    </div>
                 </div>
-            </div>
-        </div>
 
-        <!-- Right Column: Text (25%) - Static text sections that scroll naturally -->
-        <div class="text-column">
-            <!-- Text Section 1: Industry Outlook -->
-            <div class="text-section" style="height: 3800px;">
-                <div class="text-section-content" style="margin-top: calc(800px - 50vh);">
-                    <p>A generation of college students in America were told a <a
-                            href="https://www.nytimes.com/2025/09/29/podcasts/the-daily/big-tech-told-kids-to-code-the-jobs-didnt-follow.html"
-                            target="_blank">simple story</a>: go to college, learn to code, and graduate into a job with a six-figure
-                        salary, private chef lunches, and massages at work. For two decades, this was the case.</p>
-                    <p>Now, as the AI wave just starts to crash onto the technology industry, that story is beginning to crack.</p>
-                    <p>When surveyed, professionals across industries reported their anticipated changes in workforce size. The most
-                        optimistic response came from the IT sector and the most pessimistic was from HR.</p>
+                <!-- Text Section 3: Tech Job Vulnerability Scatter -->
+                <div class="text-section" style="height: 3000px;">
+                    <div class="text-section-content">
+                        <p>Unlike previous technological revolutions, AI is not just replacing lower-skilled,
+                            lower-paying jobs. Many of the
+                            highest paying jobs are also at the highest risk of being replaced by AI.</p>
+                        <p>Wether tech workers are ready for it or not, the AI revolution is here to stay. The key now
+                            is to stay ahead of
+                            the puck, use it to your advantage, and be ready to adapt.</p>
+                    </div>
                 </div>
             </div>
-
-            <!-- Text Section 2: Tech Job Vulnerability -->
-            <div class="text-section" style="height: 3000px;">
-                <div class="text-section-content">
-                    <p>While the IT sector is most optimisitc, that optimism is not evenly distributed. Based on vulnerability scores,
-                        many jobs in the IT sector are at high risk of being replaced by AI.</p>
-                </div>
-            </div>
-
-            <!-- Text Section 3: Tech Job Vulnerability Scatter -->
-            <div class="text-section" style="height: 3000px;">
-                <div class="text-section-content">
-                    <p>Unlike previous technological revolutions, AI is not just replacing lower-skilled, lower-paying jobs. Many of the
-                        highest paying jobs are also at the highest risk of being replaced by AI.</p>
-                    <p>Wether tech workers are ready for it or not, the AI revolution is here to stay. The key now is to stay ahead of
-                        the puck, use it to your advantage, and be ready to adapt.</p>
-                </div>
-            </div>
-        </div>
         </div>
     </div>
 
@@ -93,41 +103,50 @@
         </div>
 
         <div class="container">
-        <!-- Left Column: Visualizations (75%) -->
-        <div class="viz-column">
-            <!-- Section 4: Skill Demand Changes -->
-            <div class="scroll-section" id="section-4" style="height: 3000px;">
-                <div class="sticky-viz" id="skill-demand-changes-container">
-                    <div id="skill-demand-changes"></div>
+            <!-- Left Column: Visualizations (75%) -->
+            <div class="viz-column">
+                <!-- Section 4: Skill Demand Changes -->
+                <div class="scroll-section" id="section-4" style="height: 3000px;">
+                    <div class="sticky-viz" id="skill-demand-changes-container">
+                        <div id="skill-demand-changes"></div>
+                    </div>
+                </div>
+
+                <!-- Section 5: High AI Opportunity -->
+                <div class="scroll-section" id="section-5" style="height: 3000px;">
+                    <div class="sticky-viz" id="high-ai-opportunity-container">
+                        <div id="high-ai-opportunity"></div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Section 5: High AI Opportunity -->
-            <div class="scroll-section" id="section-5" style="height: 3000px;">
-                <div class="sticky-viz" id="high-ai-opportunity-container">
-                    <div id="high-ai-opportunity"></div>
+            <!-- Right Column: Text (25%) - Static text sections that scroll naturally -->
+            <div class="text-column">
+                <!-- Text Section 4: Skill Demand Changes -->
+                <div class="text-section" style="height: 3000px;">
+                    <div class="text-section-content">
+                        <p>As AI transforms the job market, certain skills are experiencing explosive growth.
+                            Understanding which AI-complementary skills are in highest demand can help job seekers
+                            position themselves for success in the AI era.</p>
+                        <p>Tracking the evolution of AI skill demand over time reveals which skills are gaining momentum
+                            and which are stabilizing. The demand index shows how each skill's market presence has
+                            changed from 2017 to 2025, with projections indicating future trends.</p>
+                    </div>
                 </div>
-            </div>
-        </div>
 
-        <!-- Right Column: Text (25%) - Static text sections that scroll naturally -->
-        <div class="text-column">
-            <!-- Text Section 4: Skill Demand Changes -->
-            <div class="text-section" style="height: 3000px;">
-                <div class="text-section-content">
-                    <p>As AI transforms the job market, certain skills are experiencing explosive growth. Understanding which AI-complementary skills are in highest demand can help job seekers position themselves for success in the AI era.</p>
-                    <p>Tracking the evolution of AI skill demand over time reveals which skills are gaining momentum and which are stabilizing. The demand index shows how each skill's market presence has changed from 2017 to 2025, with projections indicating future trends.</p>
+                <!-- Text Section 5: High AI Opportunity -->
+                <div class="text-section" style="height: 3000px;">
+                    <div class="text-section-content">
+                        <p>Not all jobs are created equal when it comes to AI opportunity. Jobs with high AI opportunity
+                            scores represent positions where AI transformation is most likely, creating new roles and
+                            requiring workers to adapt and work alongside AI technologies. These opportunities span
+                            across salary ranges, showing that AI is reshaping the job market at all levels.</p>
+                        <p>Together, these trends show a job market in rapid transformation. The skills growing today
+                            will define the jobs of tomorrow, and opportunities exist across all salary levels for those
+                            ready to adapt.</p>
+                    </div>
                 </div>
             </div>
-
-            <!-- Text Section 5: High AI Opportunity -->
-            <div class="text-section" style="height: 3000px;">
-                <div class="text-section-content">
-                    <p>Not all jobs are created equal when it comes to AI opportunity. Jobs with high AI opportunity scores represent positions where AI transformation is most likely, creating new roles and requiring workers to adapt and work alongside AI technologies. These opportunities span across salary ranges, showing that AI is reshaping the job market at all levels.</p>
-                    <p>Together, these trends show a job market in rapid transformation. The skills growing today will define the jobs of tomorrow, and opportunities exist across all salary levels for those ready to adapt.</p>
-                </div>
-            </div>
-        </div>
         </div>
     </div>
 
@@ -138,48 +157,55 @@
         </div>
 
         <div class="container">
-        <!-- Left Column: Visualizations (75%) -->
-        <div class="viz-column">
-            <!-- Section 6: Global Map -->
-            <div class="scroll-section" id="section-6" style="height: 3000px;">
-                <div class="sticky-viz" id="global-map-container">
-                    <div id="global-map"></div>
+            <!-- Left Column: Visualizations (75%) -->
+            <div class="viz-column">
+                <!-- Section 6: Global Map -->
+                <div class="scroll-section" id="section-6" style="height: 6000px;">
+                    <div class="sticky-viz" id="global-map-container">
+                        <div id="global-map"></div>
+                    </div>
+                </div> <!-- Section 7: US Map -->
+                <div class="scroll-section" id="section-7" style="height: 3000px;">
+                    <div class="sticky-viz" id="us-map-container">
+                        <div id="us-map"></div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Section 7: US Map -->
-            <div class="scroll-section" id="section-7" style="height: 3000px;">
-                <div class="sticky-viz" id="us-map-container">
-                    <div id="us-map"></div>
+            <!-- Right Column: Text (25%) - Static text sections that scroll naturally -->
+            <div class="text-column">
+                <!-- Text Section 6: Global Map -->
+                <div class="text-section" style="height: 6000px;">
+                    <div class="text-section-content">
+                        <p>AI job postings are not distributed evenly across the globe. While some countries see
+                            significant AI hiring
+                            activity, others lag behind. The size of each circle represents the volume of AI job
+                            postings relative to
+                            population. Notably our data set does not contain China the second largest AI job market.
+                        </p>
+                        <p>The global map reveals clear gerographic concentration in North America and Western Europe
+                            which dominate AI.
+                            hiring. A notable missing data point is China and India which both don't have data within
+                            our datasets.</p>
+                    </div>
                 </div>
-            </div>
-        </div>
 
-        <!-- Right Column: Text (25%) - Static text sections that scroll naturally -->
-        <div class="text-column">
-            <!-- Text Section 6: Global Map -->
-            <div class="text-section" style="height: 3000px;">
-                <div class="text-section-content">
-                    <p>AI job postings are not distributed evenly across the globe. While some countries see significant AI hiring
-                        activity, others lag behind. The size of each circle represents the volume of AI job postings relative to
-                        population.</p>
-                    <p>The global map reveals clear gerographic conventration in North America and Western Europe which dominate AI
-                        hiring. A notable missing data point is China and India which both don't have data within our datasets.</p>
+                <!-- Text Section 7: US Map -->
+                <div class="text-section" style="height: 3000px;">
+                    <div class="text-section-content">
+                        <p>Zooming in on the most prominent AI hiring hub, the United States it is clear that states
+                            such as California,
+                            Texas, and New York account for the majority share of AI job postings underscoring the
+                            clustering of AI
+                            innovation in the US.</p>
+                        <p>Together, these maps demonstrate the rise of AI in the job market is not a global wave, but a
+                            selective surge
+                            concentrated in a few countries and cities. The geographic imbalance suggests access to AI
+                            opportunities is
+                            uneven worldwide.</p>
+                    </div>
                 </div>
             </div>
-
-            <!-- Text Section 7: US Map -->
-            <div class="text-section" style="height: 3000px;">
-                <div class="text-section-content">
-                    <p>Zooming in on the most prominent AI hiring hub, the United States it is clear that states such as California,
-                        Texas, and New York account for the majority share of AI job postings underscoring the clustering of AI
-                        innovation in the US.</p>
-                    <p>Together, these maps demonstrate the rise of AI in the job market is not a global wave, but a selective surge
-                        concentrated in a few countries and cities. The geographic imbalance suggests access to AI opportunities is
-                        uneven worldwide.</p>
-                </div>
-            </div>
-        </div>
         </div>
     </div>
 
@@ -200,4 +226,5 @@
     <script src="js/us-map-scroll.js"></script>
     <script src="js/scroll-narrative.js"></script>
 </body>
+
 </html>
