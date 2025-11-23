@@ -17,7 +17,7 @@ const industryStackColors = (industryTheme.stackPalette && industryTheme.stackPa
     ];
 let industryOutlookViz = null;
 
-function createIndustryOutlook(filterState = 'all') {
+function createIndustryOutlook(filterState = 'all', scrollPercent = 100) {
     // Clear existing visualization
     d3.select("#industry-outlook").selectAll("*").remove();
 
@@ -99,7 +99,7 @@ function createIndustryOutlook(filterState = 'all') {
         });
 
         // Set up dimensions
-        const margin = { top: 40, right: 40, bottom: 150, left: 200 };
+        const margin = { top: 70, right: 40, bottom: 150, left: 200 };
         const baseWidth = 900;
         const width = baseWidth - margin.left - margin.right;
         const height = Math.max(400, functions.length * 40) - margin.top - margin.bottom;
@@ -128,7 +128,8 @@ function createIndustryOutlook(filterState = 'all') {
                 .style("padding", "6px 10px")
                 .style("border-radius", "8px")
                 .style("font-size", "11px")
-                .style("font-family", "'Stack Sans Notch', serif")
+                .style("font-family", "'Stack Sans Text', sans-serif")
+                .style("text-align", "center")
                 .style("pointer-events", "none")
                 .style("z-index", "1000");
 
@@ -174,6 +175,7 @@ function createIndustryOutlook(filterState = 'all') {
             .enter()
             .append("rect")
             .attr("class", "bar")
+            .attr("data-function", d => d.data.function) // Store function name for animation
             .attr("x", d => xScale(d[0]))
             .attr("y", d => yScale(d.data.function))
             .attr("width", d => xScale(d[1]) - xScale(d[0]))
@@ -181,12 +183,39 @@ function createIndustryOutlook(filterState = 'all') {
             .attr("fill", d => colorScale(d.key))
             .attr("stroke", "rgba(5,6,13,0.45)")
             .attr("stroke-width", 0.6)
+            .attr("opacity", 0) // Start invisible for animation
             .on("mouseover", function(event, d) {
                 const percentage = (d[1] - d[0]) * 100;
+                
+                // Parse the response to determine increase/decrease and percentage
+                const responseText = d.key;
+                // Replace "Overall" with "all" for display
+                const functionName = d.data.function === "Overall" ? "all" : d.data.function;
+                let tooltipText = "";
+                
+                if (responseText.includes("Increase")) {
+                    // Extract percentage from response (e.g., "Increase by >20%" -> ">20%")
+                    const match = responseText.match(/Increase by (.+)/);
+                    const changePercent = match ? match[1] : "";
+                    tooltipText = `${percentage.toFixed(1)}% of ${functionName} professionals<br/>said they're expecting a ${changePercent}<br/>increase in their workforce`;
+                } else if (responseText.includes("Decrease")) {
+                    // Extract percentage from response (e.g., "Decrease by 3–10%" -> "3–10%")
+                    const match = responseText.match(/Decrease by (.+)/);
+                    const changePercent = match ? match[1] : "";
+                    tooltipText = `${percentage.toFixed(1)}% of ${functionName} professionals<br/>said they're expecting a ${changePercent}<br/>decrease in their workforce`;
+                } else if (responseText === "Little or no change") {
+                    tooltipText = `${percentage.toFixed(1)}% of ${functionName} professionals<br/>said they're expecting<br/>little or no change in their workforce`;
+                } else if (responseText === "Don't know") {
+                    tooltipText = `${percentage.toFixed(1)}% of ${functionName} professionals<br/>said they don't know what to expect<br/>regarding their workforce`;
+                } else {
+                    // Fallback to original format
+                    tooltipText = `${functionName}<br/>${d.key}<br/>${percentage.toFixed(1)}%`;
+                }
+                
                 tooltip.transition()
                     .duration(200)
                     .style("opacity", 1);
-                tooltip.html(`${d.data.function}<br/>${d.key}<br/>${percentage.toFixed(1)}%`);
+                tooltip.html(tooltipText);
                 
                 d3.select(this)
                     .attr("stroke-width", 2)
@@ -211,7 +240,7 @@ function createIndustryOutlook(filterState = 'all') {
             });
 
         // Add function labels
-        g.append("g")
+        const functionLabels = g.append("g")
             .selectAll(".function-label")
             .data(functions)
             .enter()
@@ -225,16 +254,17 @@ function createIndustryOutlook(filterState = 'all') {
             .attr("font-family", "'Stack Sans Notch', serif")
             .attr("fill", d => d === "Overall" ? industryTextPrimary : industryTextMuted)
             .attr("font-weight", "300")
+            .attr("opacity", 0) // Start invisible for animation
             .text(d => d);
 
         // Add x-axis
-        const xAxis = d3.axisBottom(xScale)
+        const xAxis = d3.axisTop(xScale)
             .tickFormat(d3.format(".0%"))
             .ticks(5);
 
         const xAxisGroup = g.append("g")
             .attr("class", "x-axis")
-            .attr("transform", `translate(0,${height})`)
+            .attr("transform", `translate(0,0)`)
             .call(xAxis);
 
         xAxisGroup.selectAll("text")
@@ -332,7 +362,12 @@ function createIndustryOutlook(filterState = 'all') {
             .attr("fill", industryTextMuted)
             .text(d => d);
 
-        industryOutlookViz = { svg, g, xScale, yScale, functions, data, responses, colorScale };
+        // Show/hide rows based on scroll progress
+        // Ensure at least first row is visible if scrollPercent is very low
+        const adjustedScrollPercent = Math.max(scrollPercent, 5);
+        animateRowsByScroll(adjustedScrollPercent, functions, g);
+
+        industryOutlookViz = { svg, g, xScale, yScale, functions, data, responses, colorScale, filterState };
     }).catch(function(error) {
         console.error("Error loading CSV:", error);
     });
@@ -342,11 +377,49 @@ let currentFilterState = null;
 let industryData = null;
 let industryVizReady = false;
 
-function updateIndustryOutlook(filterState) {
+// Function to show/hide rows based on scroll progress (no fade animation)
+function animateRowsByScroll(scrollPercent, functions, g) {
+    const numFunctions = functions.length;
+    // Calculate how many rows should be visible (0 to numFunctions)
+    // Use scrollPercent (0-100) to determine visibility
+    const visibleCount = Math.max(0, Math.ceil((scrollPercent / 100) * numFunctions));
+    
+    // Set opacity directly (no transitions) for each function row
+    functions.forEach((func, index) => {
+        const shouldBeVisible = index < visibleCount;
+        const targetOpacity = shouldBeVisible ? 1 : 0;
+        
+        // Set bars opacity directly (no transition)
+        g.selectAll(".bar")
+            .filter(function() {
+                return d3.select(this).attr("data-function") === func;
+            })
+            .attr("opacity", targetOpacity);
+        
+        // Set label opacity directly (no transition)
+        g.selectAll(".function-label")
+            .filter(function(d) {
+                return d === func;
+            })
+            .attr("opacity", targetOpacity);
+    });
+}
+
+function updateIndustryOutlook(filterState, scrollPercent = 100) {
     // Only recreate if filter state changed
     if (filterState !== currentFilterState && industryVizReady) {
         currentFilterState = filterState;
-        createIndustryOutlook(filterState);
+        createIndustryOutlook(filterState, scrollPercent);
+    } else if (industryVizReady && industryOutlookViz) {
+        // Always update animation if visualization exists
+        // Ensure we're working with the right filter state
+        if (industryOutlookViz.filterState === filterState) {
+            animateRowsByScroll(scrollPercent, industryOutlookViz.functions, industryOutlookViz.g);
+        } else {
+            // Filter state mismatch, recreate
+            currentFilterState = filterState;
+            createIndustryOutlook(filterState, scrollPercent);
+        }
     }
 }
 
@@ -354,7 +427,10 @@ function updateIndustryOutlook(filterState) {
 d3.csv("data/Data/fig_4.4.12.csv").then(function(data) {
     industryData = data;
     industryVizReady = true;
-    createIndustryOutlook('all');
+    // Start with 'all' state and show first row initially
+    // The scroll handler will update this as user scrolls
+    currentFilterState = 'all';
+    createIndustryOutlook('all', 5); // Show first row (5% = at least 1 row visible)
 }).catch(function(error) {
     console.error("Error loading industry data:", error);
 });

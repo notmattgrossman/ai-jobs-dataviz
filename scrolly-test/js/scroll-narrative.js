@@ -2,24 +2,100 @@
 // Text is now static HTML, so we only need to handle visualization updates
 
 $(document).ready(function() {
-    // Initialize scroll watchers
-    setTimeout(initScrollNarrative, 1000);
+    // Initialize scroll watchers - wait a bit longer to ensure all elements are rendered
+    setTimeout(initScrollNarrative, 2000);
 });
 
+// Function to handle section 1 scroll updates
+function handleSection1Scroll(scrollPercent) {
+    // Always show 'all' functions and animate rows based on scroll progress
+    // Map scrollPercent (0-100% through section) directly to animation progress (0-100% of rows)
+    const animationPercent = Math.max(0, Math.min(100, scrollPercent));
+    
+    // Always use 'all' filter state so all rows are available for animation
+    updateIndustryOutlook('all', animationPercent);
+}
+
 function initScrollNarrative() {
-    // Section 1: Industry Outlook
-    scrollWatcher({
-        parent: '#section-1',
-        onUpdate: function(scrollPercent) {
-            if (scrollPercent < 0.33) {
-                updateIndustryOutlook('overall');
-            } else if (scrollPercent < 0.66) {
-                updateIndustryOutlook('all');
+    // Section 1: Industry Outlook - Set up manual scroll handler
+    const $section1 = $('#section-1');
+    
+    if ($section1.length === 0) {
+        setTimeout(initScrollNarrative, 500);
+        return;
+    }
+    
+    let lastScrollPercent = -1;
+    let scrollHandlerAttached = false;
+    
+    function setupSection1ScrollHandler() {
+        if (scrollHandlerAttached) return;
+        
+        const section1 = $section1[0];
+        if (!section1) return;
+        
+        function onScroll() {
+            const rect = section1.getBoundingClientRect();
+            const windowHeight = window.innerHeight;
+            const sectionTop = rect.top;
+            const sectionHeight = rect.height;
+            
+            // Calculate scroll progress through section
+            let scrollPercent = 0;
+            if (sectionTop < 0 && sectionTop + sectionHeight > windowHeight) {
+                // Section is in viewport and being scrolled through
+                const scrolled = Math.abs(sectionTop);
+                const totalScrollable = sectionHeight - windowHeight;
+                if (totalScrollable > 0) {
+                    scrollPercent = Math.min(100, Math.max(0, (scrolled / totalScrollable) * 100));
+                }
+            } else if (sectionTop >= 0) {
+                // Section hasn't reached viewport yet
+                scrollPercent = 0;
             } else {
-                updateIndustryOutlook('it');
+                // Section has been scrolled past
+                scrollPercent = 100;
+            }
+            
+            // Update if scroll percent changed
+            if (Math.abs(scrollPercent - lastScrollPercent) > 0.1) {
+                lastScrollPercent = scrollPercent;
+                handleSection1Scroll(scrollPercent);
             }
         }
-    });
+        
+        // Use requestAnimationFrame for smooth scrolling
+        let ticking = false;
+        function requestTick() {
+            if (!ticking) {
+                window.requestAnimationFrame(function() {
+                    onScroll();
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        }
+        
+        $(window).on('scroll', requestTick);
+        $(window).on('resize', requestTick);
+        onScroll(); // Initial call
+        scrollHandlerAttached = true;
+    }
+    
+    // Set up scroll handler immediately
+    setupSection1ScrollHandler();
+    
+    // Also try scrollWatcher (will fail but that's ok)
+    try {
+        scrollWatcher({
+            parent: '#section-1',
+            onUpdate: function(scrollPercent) {
+                handleSection1Scroll(scrollPercent);
+            }
+        });
+    } catch (error) {
+        // scrollWatcher failed, manual handler will work
+    }
 
     // Section 2: Tech Job Vulnerability (Bubble)
     scrollWatcher({
