@@ -97,25 +97,79 @@ function initScrollNarrative() {
         // scrollWatcher failed, manual handler will work
     }
 
-    // Section 2: Tech Job Vulnerability (Bubble)
-    scrollWatcher({
-        parent: '#section-2',
-        onUpdate: function(scrollPercent) {
-            if (scrollPercent > 0.1 && !techJobVulnerabilityViz) {
-                createTechJobVulnerability();
+    // Section 2: Tech Job Vulnerability (Bubble to Scatter Transition) - Manual scroll handler
+    const $section2 = $('#section-2');
+    
+    if ($section2.length > 0) {
+        let lastScrollPercent2 = -1;
+        let scrollHandlerAttached2 = false;
+        
+        function setupSection2ScrollHandler() {
+            if (scrollHandlerAttached2) return;
+            
+            const section2 = $section2[0];
+            if (!section2) return;
+            
+            function onScroll2() {
+                const rect = section2.getBoundingClientRect();
+                const windowHeight = window.innerHeight;
+                const sectionTop = rect.top;
+                const sectionHeight = rect.height;
+                
+                // Calculate scroll progress through section
+                let scrollPercent = 0;
+                if (sectionTop < 0 && sectionTop + sectionHeight > windowHeight) {
+                    // Section is in viewport and being scrolled through
+                    const scrolled = Math.abs(sectionTop);
+                    const totalScrollable = sectionHeight - windowHeight;
+                    if (totalScrollable > 0) {
+                        scrollPercent = Math.min(100, Math.max(0, (scrolled / totalScrollable) * 100));
+                    }
+                } else if (sectionTop >= 0) {
+                    // Section hasn't reached viewport yet
+                    scrollPercent = 0;
+                } else {
+                    // Section has been scrolled past
+                    scrollPercent = 100;
+                }
+                
+                // Initialize visualization if needed
+                if (scrollPercent > 0.1 && !techJobVulnerabilityViz) {
+                    createTechJobVulnerability();
+                    // Wait a bit for simulation to settle before updating
+                    setTimeout(function() {
+                        updateTechVulnerabilityTransition(scrollPercent);
+                    }, 1000);
+                } else if (techJobVulnerabilityViz) {
+                    // Update if scroll percent changed
+                    if (Math.abs(scrollPercent - lastScrollPercent2) > 0.1) {
+                        lastScrollPercent2 = scrollPercent;
+                        updateTechVulnerabilityTransition(scrollPercent);
+                    }
+                }
             }
-        }
-    });
-
-    // Section 3: Tech Job Vulnerability Scatter
-    scrollWatcher({
-        parent: '#section-3',
-        onUpdate: function(scrollPercent) {
-            if (scrollPercent > 0.1 && !techJobVulnerabilityScatterViz) {
-                createTechJobVulnerabilityScatter();
+            
+            // Use requestAnimationFrame for smooth scrolling
+            let ticking2 = false;
+            function requestTick2() {
+                if (!ticking2) {
+                    window.requestAnimationFrame(function() {
+                        onScroll2();
+                        ticking2 = false;
+                    });
+                    ticking2 = true;
+                }
             }
+            
+            $(window).on('scroll', requestTick2);
+            $(window).on('resize', requestTick2);
+            onScroll2(); // Initial call
+            scrollHandlerAttached2 = true;
         }
-    });
+        
+        // Set up scroll handler immediately
+        setupSection2ScrollHandler();
+    }
 
     // Section 4: Skill Demand Changes
     scrollWatcher({
