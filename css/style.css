@@ -3,12 +3,14 @@
   --surface: #121520;
   --panel: #181b2a;
   --panel-alt: #1e2235;
+  --panel-glow: rgba(31, 184, 255, 0.2);
   --text-primary: #f8f9fc;
-  --text-muted: #7b7e87;
+  --text-secondary: #8fa8f3;
+  --text-muted: #bdbdbd;
   --accent: #1fb8ff;
   --accent-alt: #6be2ff;
   --border: rgba(255, 255, 255, 0.08);
-  --shadow: 0 25px 55px rgba(0, 0, 0, 0.55);
+  --shadow: 0 35px 65px rgba(0, 0, 0, 0.55);
 }
 
 * {
@@ -20,9 +22,12 @@
 body {
   background-color: var(--bg);
   font-family: "Stack Sans Notch", sans-serif;
-  line-height: 1.7;
+  line-height: 1.6;
   color: var(--text-muted);
   padding: 2rem;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 div {
@@ -34,34 +39,35 @@ h1 {
   color: var(--text-primary);
   font-family: "Stack Sans Notch", sans-serif;
   font-weight: 700;
-  font-size: 2.25rem;
+  font-size: clamp(1.75rem, 5vw, 2.5rem);
   margin-bottom: 1rem;
-  line-height: 1.2;
-  letter-spacing: 0.03em;
+  line-height: 1.1;
+  letter-spacing: 0.01em;
 }
 
 h2 {
   color: var(--text-primary);
   font-family: "Stack Sans Text", sans-serif;
-  font-weight: 700;
-  font-size: 1.25rem;
+  font-weight: 600;
+  font-size: clamp(1rem, 2vw, 1.25rem);
   margin-top: 0;
   margin-bottom: 1.5rem;
   font-style: normal;
   line-height: 1.5;
+  letter-spacing: 0.01em;
 }
 
 h3 {
   color: var(--text-primary);
   font-family: "Stack Sans Notch", sans-serif;
   font-weight: 600;
-  font-size: 1.125rem;
+  font-size: clamp(0.875rem, 1.75vw, 1rem);
   margin: 4rem auto 1.5rem;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.08em;
   border-bottom: 1px solid var(--border);
   padding-bottom: 0.5rem;
-  line-height: 1.6;
+  line-height: 1.5;
 }
 
 h3 em {
@@ -69,16 +75,18 @@ h3 em {
   font-weight: 400;
   text-transform: uppercase;
   letter-spacing: normal;
-  font-size: 1.125rem;
+  font-size: clamp(0.9375rem, 2vw, 1.125rem);
   color: var(--text-muted);
 }
 
 p {
   margin-bottom: 1.5rem;
-  font-size: 1rem;
-  line-height: 1.7;
+  font-size: clamp(0.875rem, 2.5vw, 1.0625rem);
+  line-height: 1.75;
   color: var(--text-muted);
   font-family: "Stack Sans Text", sans-serif;
+  letter-spacing: -0.01em;
+  font-weight: 400;
 }
 
 ul {
@@ -89,13 +97,26 @@ ul {
 
 li {
   margin-bottom: 0.75rem;
-  font-size: 1rem;
+  font-size: clamp(0.875rem, 2.5vw, 1.0625rem);
   color: var(--text-muted);
-  line-height: 1.7;
+  line-height: 1.75;
+  font-family: "Stack Sans Text", sans-serif;
+  letter-spacing: -0.01em;
+}
+
+p.authors {
+  color: var(--text-muted);
+  font-family: "Stack Sans Text", sans-serif;
+  font-size: clamp(0.75rem, 1.5vw, 0.875rem);
+  font-weight: 400;
+  margin-top: 1rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  opacity: 0.85;
 }
 
 a {
-  color: var(--text-primary);
+  color: var(--text-secondary);
   text-decoration: none;
   transition: color 0.2s ease, opacity 0.2s ease;
 }
@@ -105,7 +126,7 @@ a:hover {
 }
 
 a:visited {
-  color: var(--text-primary);
+  color: var(--text-secondary);
 }
 
 hr {
