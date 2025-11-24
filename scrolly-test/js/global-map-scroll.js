@@ -5,6 +5,7 @@ let globalMapTitle = null;
 let globalCurrentYearIndex = 0;
 const globalMapTheme = window.aiVizTheme || {};
 const globalTextPrimary = globalMapTheme.palette?.textPrimary || "#f6f7ff";
+const globalTextMuted = globalMapTheme.palette?.textMuted || "#9da7c2";
 const globalSurface = globalMapTheme.palette?.surface || "#0e111f";
 const globalBorder = "#fff";
 const availableYears = ["2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024"];
@@ -96,6 +97,16 @@ async function createGlobalMap() {
             .attr("stroke", globalBorder)
             .attr("stroke-width", 0.8);
 
+        // Add background rectangle for titles
+        const titleBgHeight = 80;
+        globalMapSvg.append("rect")
+            .attr("x", 0)
+            .attr("y", 0)
+            .attr("width", width)
+            .attr("height", titleBgHeight)
+            .attr("fill", "#0a0b14");
+
+        // Add title back to SVG
         globalMapTitle = globalMapSvg.append("text")
             .attr("x", width / 2)
             .attr("y", 30)
@@ -105,6 +116,17 @@ async function createGlobalMap() {
             .attr("font-weight", "300")
             .attr("fill", globalTextPrimary)
             .text(`Global AI Job Posting Concentration (${availableYears[globalCurrentYearIndex]})`);
+
+        // Add subtitle
+        globalMapSvg.append("text")
+            .attr("x", width / 2)
+            .attr("y", 55)
+            .attr("text-anchor", "middle")
+            .attr("font-size", "12px")
+            .attr("font-family", "'Stack Sans Notch', serif")
+            .attr("font-weight", "300")
+            .attr("fill", globalTextMuted)
+            .text("Circle size ∝ (% of job postings that are AI-related) × population; color indicates % AI job postings.");
 
         function getCircleDataForYear(year) {
             const yearData = globalMapData.filter(d => d.Year === year);
@@ -214,14 +236,16 @@ function updateGlobalMapYear(yearIndex) {
     const year = availableYears[yearIndex];
     const newData = globalMapViz.getCircleDataForYear(year);
 
-    globalMapTitle.transition()
-        .duration(600)
+    // Update SVG title element with fade transition
+    globalMapTitle
+        .transition()
+        .duration(300)
         .style("opacity", 0)
         .transition()
         .duration(0)
         .text(`Global AI Job Posting Concentration (${year})`)
         .transition()
-        .duration(600)
+        .duration(300)
         .style("opacity", 1);
 
     let circles = globalMapSvg.selectAll("circle")

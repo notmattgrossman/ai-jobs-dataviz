@@ -1,5 +1,10 @@
 let usMapViz = null;
 let usMapData = null;
+let usMapRawCounts = null;
+let usMapIntensity = null;
+let usMapTitle = null;
+let usMapSubtitle = null;
+let usCurrentMetric = 0; // 0 = share of US jobs, 1 = AI intensity
 const usMapTheme = window.aiVizTheme || {};
 const usTextPrimary = usMapTheme.palette?.textPrimary || "#f6f7ff";
 const usTextMuted = usMapTheme.palette?.textMuted || "#9da7c2";
@@ -26,8 +31,15 @@ async function createUSMap() {
     }
 
     try {
+        // Load all three datasets
         if (!usMapData) {
-            usMapData = await d3.csv("data/Data/fig_4.2.10.csv");
+            usMapData = await d3.csv("data/Data/fig_4.2.10.csv"); // Share of US AI jobs
+        }
+        if (!usMapRawCounts) {
+            usMapRawCounts = await d3.csv("data/Data/fig_4.2.8.csv"); // Raw counts
+        }
+        if (!usMapIntensity) {
+            usMapIntensity = await d3.csv("data/Data/fig_4.2.9.csv"); // AI intensity
         }
 
         const width = 1200, height = 700;
@@ -40,7 +52,16 @@ async function createUSMap() {
             .attr("viewBox", `0 0 ${width} ${height}`)
             .attr("preserveAspectRatio", "xMidYMid meet");
 
-        svg.append("text")
+        // Add background rectangle for titles
+        const titleBgHeight = 80;
+        svg.append("rect")
+            .attr("x", 0)
+            .attr("y", 0)
+            .attr("width", width)
+            .attr("height", titleBgHeight)
+            .attr("fill", "#0a0b14");
+
+        usMapTitle = svg.append("text")
             .attr("x", width / 2)
             .attr("y", 30)
             .attr("text-anchor", "middle")
@@ -49,6 +70,17 @@ async function createUSMap() {
             .attr("font-weight", "300")
             .attr("fill", usTextPrimary)
             .text("US AI Job Posting Distribution by State (2024)");
+
+        // Subtitle explaining how values are calculated
+        usMapSubtitle = svg.append("text")
+            .attr("x", width / 2)
+            .attr("y", 55)
+            .attr("text-anchor", "middle")
+            .attr("font-size", "12px")
+            .attr("font-family", "'Stack Sans Notch', serif")
+            .attr("font-weight", "300")
+            .attr("fill", usTextMuted)
+            .text("Color shows each state's share of US AI job postings (%), using 2024 values.");
 
         const projection = d3.geoAlbersUsa()
             .translate([width / 2, height / 2])
@@ -69,12 +101,32 @@ async function createUSMap() {
             "District of Columbia": "DC"
         };
 
+        // Build data maps for all metrics
         const dataByState = new Map();
+        const rawCountsByState = new Map();
+        const intensityByState = new Map();
+
         usMapData.forEach(row => {
             const stateCode = row["State code"]?.trim();
             const percent = parseFloat(row["Percentage of US AI job postings"]?.replace("%", ""));
             if (stateCode && !isNaN(percent)) {
                 dataByState.set(stateCode, percent);
+            }
+        });
+
+        usMapRawCounts.forEach(row => {
+            const stateCode = row["State code"]?.trim();
+            const count = parseInt(row["Numbe rof AI job postings"]); // Note: typo in CSV header
+            if (stateCode && !isNaN(count)) {
+                rawCountsByState.set(stateCode, count);
+            }
+        });
+
+        usMapIntensity.forEach(row => {
+            const stateCode = row["State code"]?.trim();
+            const percent = parseFloat(row["Percentage of US states' job postings in AI"]?.replace("%", ""));
+            if (stateCode && !isNaN(percent)) {
+                intensityByState.set(stateCode, percent);
             }
         });
 
@@ -106,14 +158,24 @@ async function createUSMap() {
                 const stateName = d.properties.name;
                 const stateCode = stateNameToCode[stateName];
                 const value = dataByState.get(stateCode);
-                if (value) {
+                const rawCount = rawCountsByState.get(stateCode);
+                const intensity = intensityByState.get(stateCode);
+
+                if (value && rawCount) {
                     tooltip.transition()
                         .duration(200)
                         .style("opacity", 1);
-                    tooltip.html(
-                        `${stateName}<br/>` +
-                        `${value}% of US AI job postings`
-                    );
+
+                    let tooltipContent = `<strong>${stateName}</strong><br/>`;
+                    tooltipContent += `${rawCount.toLocaleString()} AI job postings<br/>`;
+
+                    if (usCurrentMetric === 0) {
+                        tooltipContent += `${value}% of US AI job postings`;
+                    } else {
+                        tooltipContent += `${intensity}% of state's jobs are AI-related`;
+                    }
+
+                    tooltip.html(tooltipContent);
                 }
             })
             .on("mousemove", function (event, d) {
@@ -182,23 +244,183 @@ async function createUSMap() {
             .attr("font-size", "10px")
             .attr("fill", usTextMuted);
 
+        // Add initial legend label for first metric
         legend.append("text")
-            .attr("x", legendWidth / 2)
+            .attr("class", "legend-label")
+            .attr("x", 12)
             .attr("y", -5)
             .attr("text-anchor", "middle")
             .attr("font-family", "'Stack Sans Notch', serif")
             .attr("font-size", "12px")
             .attr("font-weight", "300")
             .attr("fill", usTextPrimary)
-            .text("% of US AI Job Postings");
+            .text("% of US AI Jobs");
 
-        usMapViz = { svg, projection, path, states, dataByState };
+        usMapViz = {
+            svg,
+            projection,
+            path,
+            states,
+            dataByState,
+            rawCountsByState,
+            intensityByState,
+            colorScale,
+            stateNameToCode,
+            tooltip,
+            legend,
+            legendAxis,
+            legendScale
+        };
     } catch (error) {
         console.error("Error loading US map:", error);
     }
 }
 
+function updateUSMapMetric(metricIndex) {
+    if (!usMapViz || usCurrentMetric === metricIndex) return;
+
+    usCurrentMetric = metricIndex;
+    const { svg, states, dataByState, intensityByState, colorScale, stateNameToCode, legendAxis, legendScale, legend } = usMapViz;
+
+    // Choose data and labels based on metric
+    let currentData, titleText, subtitleText, legendLabel;
+
+    if (metricIndex === 0) {
+        currentData = dataByState;
+        titleText = "US AI Job Posting Distribution by State (2024)";
+        subtitleText = "Color shows each state's share of US AI job postings (%), using 2024 values.";
+        legendLabel = "% of US AI Job Postings";
+    } else {
+        currentData = intensityByState;
+        titleText = "AI Job Intensity by State (2024)";
+        subtitleText = "Color shows % of each state's job postings that are AI-related.";
+        legendLabel = "% AI Job Intensity";
+    }
+
+    // Update color scale domain
+    colorScale.domain([0, d3.max(Array.from(currentData.values()))]);
+
+    // Update titles with fade
+    usMapTitle.transition()
+        .duration(300)
+        .style("opacity", 0)
+        .transition()
+        .duration(0)
+        .text(titleText)
+        .transition()
+        .duration(300)
+        .style("opacity", 1);
+
+    usMapSubtitle.transition()
+        .duration(300)
+        .style("opacity", 0)
+        .transition()
+        .duration(0)
+        .text(subtitleText)
+        .transition()
+        .duration(300)
+        .style("opacity", 1);
+
+    // Update state fills
+    svg.selectAll("path.state-fill")
+        .transition()
+        .duration(800)
+        .attr("fill", d => {
+            const stateName = d.properties.name;
+            const stateCode = stateNameToCode[stateName];
+            const value = currentData.get(stateCode);
+            return value ? colorScale(value) : usMapViz.svg.select("rect").attr("fill");
+        });
+
+    // Update legend
+    legendScale.domain(colorScale.domain());
+
+    const newLegendAxis = d3.axisLeft(legendScale)
+        .ticks(5)
+        .tickFormat(d => d.toFixed(1) + "%");
+
+    legend.select("g")
+        .transition()
+        .duration(800)
+        .call(newLegendAxis)
+        .selectAll("text")
+        .style("font-size", "10px")
+        .attr("font-family", "'Stack Sans Notch', serif")
+        .attr("fill", usTextMuted);
+
+    // Update legend gradient
+    const linearGradient = svg.select("#legend-gradient-vertical");
+    linearGradient.selectAll("stop")
+        .transition()
+        .duration(800)
+        .attr("stop-color", d => colorScale(d * colorScale.domain()[1]));
+
+    // Update legend label - swap between the two metrics
+    const legendLabelText = metricIndex === 0 ? "% of US AI Jobs" : "% of State's Jobs";
+
+    legend.select("text.legend-label")
+        .transition()
+        .duration(600)
+        .style("opacity", 0)
+        .transition()
+        .duration(0)
+        .text(legendLabelText)
+        .transition()
+        .duration(600)
+        .style("opacity", 1);
+}
+
+function setupUSMapScrollObserver() {
+    const section = document.getElementById('section-7');
+    if (!section) {
+        console.error('Section-7 not found');
+        return;
+    }
+
+    let ticking = false;
+
+    function updateOnScroll() {
+        const sectionRect = section.getBoundingClientRect();
+        const sectionTop = sectionRect.top;
+        const sectionHeight = sectionRect.height;
+        const viewportHeight = window.innerHeight;
+
+        if (sectionTop <= 0 && sectionTop + sectionHeight > 0) {
+            const scrollProgress = Math.max(0, Math.min(1,
+                Math.abs(sectionTop) / (sectionHeight - viewportHeight)
+            ));
+
+            // Transition at 50% scroll through the section
+            const targetMetric = scrollProgress < 0.5 ? 0 : 1;
+
+            if (targetMetric !== usCurrentMetric) {
+                console.log(`Updating US map to metric: ${targetMetric} (progress: ${scrollProgress.toFixed(2)})`);
+                updateUSMapMetric(targetMetric);
+            }
+        } else if (sectionTop > 0) {
+            if (usCurrentMetric !== 0) {
+                updateUSMapMetric(0);
+            }
+        }
+
+        ticking = false;
+    }
+
+    window.addEventListener('scroll', () => {
+        if (!ticking) {
+            window.requestAnimationFrame(updateOnScroll);
+            ticking = true;
+        }
+    });
+
+    updateOnScroll();
+}
+
 $(document).ready(function () {
-    setTimeout(createUSMap, 500);
+    setTimeout(() => {
+        createUSMap().then(() => {
+            setupUSMapScrollObserver();
+        });
+    }, 500);
 });
 

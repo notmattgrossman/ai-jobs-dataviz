@@ -167,7 +167,7 @@ h2 {
   background: transparent !important;
 }
 
-.sticky-viz > div {
+.sticky-viz>div {
   width: 100%;
   padding: 0;
   border: none !important;
@@ -345,4 +345,3 @@ footer a:visited {
     display: none;
   }
 }
-
