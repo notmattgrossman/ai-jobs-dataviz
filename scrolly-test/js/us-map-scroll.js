@@ -4,7 +4,7 @@ let usMapRawCounts = null;
 let usMapIntensity = null;
 let usMapTitle = null;
 let usMapSubtitle = null;
-let usCurrentMetric = 0; // 0 = share of US jobs, 1 = AI intensity
+let usCurrentMetric = 0;
 const usMapTheme = window.aiVizTheme || {};
 const usTextPrimary = usMapTheme.palette?.textPrimary || "#f6f7ff";
 const usTextMuted = usMapTheme.palette?.textMuted || "#9da7c2";
@@ -31,7 +31,6 @@ async function createUSMap() {
     }
 
     try {
-        // Load all three datasets
         if (!usMapData) {
             usMapData = await d3.csv("data/Data/fig_4.2.10.csv"); // Share of US AI jobs
         }
@@ -52,7 +51,6 @@ async function createUSMap() {
             .attr("viewBox", `0 0 ${width} ${height}`)
             .attr("preserveAspectRatio", "xMidYMid meet");
 
-        // Add background rectangle for titles
         const titleBgHeight = 80;
         svg.append("rect")
             .attr("x", 0)
@@ -71,7 +69,6 @@ async function createUSMap() {
             .attr("fill", usTextPrimary)
             .text("US AI Job Posting Distribution by State (2024)");
 
-        // Subtitle explaining how values are calculated
         usMapSubtitle = svg.append("text")
             .attr("x", width / 2)
             .attr("y", 55)
@@ -101,7 +98,6 @@ async function createUSMap() {
             "District of Columbia": "DC"
         };
 
-        // Build data maps for all metrics
         const dataByState = new Map();
         const rawCountsByState = new Map();
         const intensityByState = new Map();
@@ -282,7 +278,6 @@ function updateUSMapMetric(metricIndex) {
     usCurrentMetric = metricIndex;
     const { svg, states, dataByState, intensityByState, colorScale, stateNameToCode, legendAxis, legendScale, legend } = usMapViz;
 
-    // Choose data and labels based on metric
     let currentData, titleText, subtitleText, legendLabel;
 
     if (metricIndex === 0) {
@@ -297,10 +292,8 @@ function updateUSMapMetric(metricIndex) {
         legendLabel = "% AI Job Intensity";
     }
 
-    // Update color scale domain
     colorScale.domain([0, d3.max(Array.from(currentData.values()))]);
 
-    // Update titles with fade
     usMapTitle.transition()
         .duration(300)
         .style("opacity", 0)
@@ -321,7 +314,6 @@ function updateUSMapMetric(metricIndex) {
         .duration(300)
         .style("opacity", 1);
 
-    // Update state fills
     svg.selectAll("path.state-fill")
         .transition()
         .duration(800)
@@ -332,7 +324,6 @@ function updateUSMapMetric(metricIndex) {
             return value ? colorScale(value) : usMapViz.svg.select("rect").attr("fill");
         });
 
-    // Update legend
     legendScale.domain(colorScale.domain());
 
     const newLegendAxis = d3.axisLeft(legendScale)
@@ -348,14 +339,12 @@ function updateUSMapMetric(metricIndex) {
         .attr("font-family", "'Stack Sans Notch', serif")
         .attr("fill", usTextMuted);
 
-    // Update legend gradient
     const linearGradient = svg.select("#legend-gradient-vertical");
     linearGradient.selectAll("stop")
         .transition()
         .duration(800)
         .attr("stop-color", d => colorScale(d * colorScale.domain()[1]));
 
-    // Update legend label - swap between the two metrics
     const legendLabelText = metricIndex === 0 ? "% of US AI Jobs" : "% of State's Jobs";
 
     legend.select("text.legend-label")
@@ -390,7 +379,6 @@ function setupUSMapScrollObserver() {
                 Math.abs(sectionTop) / (sectionHeight - viewportHeight)
             ));
 
-            // Transition at 50% scroll through the section
             const targetMetric = scrollProgress < 0.5 ? 0 : 1;
 
             if (targetMetric !== usCurrentMetric) {

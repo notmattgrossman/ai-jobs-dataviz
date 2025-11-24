@@ -97,7 +97,6 @@ async function createGlobalMap() {
             .attr("stroke", globalBorder)
             .attr("stroke-width", 0.8);
 
-        // Add background rectangle for titles
         const titleBgHeight = 80;
         globalMapSvg.append("rect")
             .attr("x", 0)
@@ -106,7 +105,6 @@ async function createGlobalMap() {
             .attr("height", titleBgHeight)
             .attr("fill", "#0a0b14");
 
-        // Add title back to SVG
         globalMapTitle = globalMapSvg.append("text")
             .attr("x", width / 2)
             .attr("y", 30)
@@ -117,7 +115,6 @@ async function createGlobalMap() {
             .attr("fill", globalTextPrimary)
             .text(`Global AI Job Posting Concentration (${availableYears[globalCurrentYearIndex]})`);
 
-        // Add subtitle
         globalMapSvg.append("text")
             .attr("x", width / 2)
             .attr("y", 55)
@@ -236,7 +233,6 @@ function updateGlobalMapYear(yearIndex) {
     const year = availableYears[yearIndex];
     const newData = globalMapViz.getCircleDataForYear(year);
 
-    // Update SVG title element with fade transition
     globalMapTitle
         .transition()
         .duration(300)
