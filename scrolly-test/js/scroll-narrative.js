@@ -171,25 +171,153 @@ function initScrollNarrative() {
         setupSection2ScrollHandler();
     }
 
-    // Section 4: Skill Demand Changes
-    scrollWatcher({
-        parent: '#section-4',
-        onUpdate: function(scrollPercent) {
-            if (scrollPercent > 0.1 && !skillDemandChangesViz) {
-                createSkillDemandChanges();
+    // Section 4: Skill Demand Changes - Manual scroll handler with lens effect
+    const $section4 = $('#section-4');
+    
+    if ($section4.length > 0) {
+        let lastScrollPercent4 = -1;
+        let scrollHandlerAttached4 = false;
+        
+        function setupSection4ScrollHandler() {
+            if (scrollHandlerAttached4) return;
+            
+            const section4 = $section4[0];
+            if (!section4) return;
+            
+            function onScroll4() {
+                const rect = section4.getBoundingClientRect();
+                const windowHeight = window.innerHeight;
+                const sectionTop = rect.top;
+                const sectionHeight = rect.height;
+                
+                // Calculate scroll progress through section
+                let scrollPercent = 0;
+                if (sectionTop < 0 && sectionTop + sectionHeight > windowHeight) {
+                    // Section is in viewport and being scrolled through
+                    const scrolled = Math.abs(sectionTop);
+                    const totalScrollable = sectionHeight - windowHeight;
+                    if (totalScrollable > 0) {
+                        scrollPercent = Math.min(100, Math.max(0, (scrolled / totalScrollable) * 100));
+                    }
+                } else if (sectionTop >= 0) {
+                    // Section hasn't reached viewport yet
+                    scrollPercent = 0;
+                } else {
+                    // Section has been scrolled past
+                    scrollPercent = 100;
+                }
+                
+                // Initialize visualization if needed
+                if (scrollPercent > 0.1 && !skillDemandChangesViz) {
+                    createSkillDemandChanges();
+                    // Wait a bit for visualization to render before updating lens
+                    setTimeout(function() {
+                        updateSkillDemandLens(scrollPercent);
+                    }, 500);
+                } else if (skillDemandChangesViz) {
+                    // Update lens if scroll percent changed
+                    if (Math.abs(scrollPercent - lastScrollPercent4) > 0.1) {
+                        lastScrollPercent4 = scrollPercent;
+                        updateSkillDemandLens(scrollPercent);
+                    }
+                }
             }
+            
+            // Use requestAnimationFrame for smooth scrolling
+            let ticking4 = false;
+            function requestTick4() {
+                if (!ticking4) {
+                    window.requestAnimationFrame(function() {
+                        onScroll4();
+                        ticking4 = false;
+                    });
+                    ticking4 = true;
+                }
+            }
+            
+            $(window).on('scroll', requestTick4);
+            $(window).on('resize', requestTick4);
+            onScroll4(); // Initial call
+            scrollHandlerAttached4 = true;
         }
-    });
+        
+        // Set up scroll handler immediately
+        setupSection4ScrollHandler();
+    }
 
-    // Section 5: High AI Opportunity
-    scrollWatcher({
-        parent: '#section-5',
-        onUpdate: function(scrollPercent) {
-            if (scrollPercent > 0.1 && !highAIOpportunityViz) {
-                createHighAIOpportunity();
+    // Section 5: High AI Opportunity - Manual scroll handler with salary bands to scatter transition
+    const $section5 = $('#section-5');
+    
+    if ($section5.length > 0) {
+        let lastScrollPercent5 = -1;
+        let scrollHandlerAttached5 = false;
+        
+        function setupSection5ScrollHandler() {
+            if (scrollHandlerAttached5) return;
+            
+            const section5 = $section5[0];
+            if (!section5) return;
+            
+            function onScroll5() {
+                const rect = section5.getBoundingClientRect();
+                const windowHeight = window.innerHeight;
+                const sectionTop = rect.top;
+                const sectionHeight = rect.height;
+                
+                // Calculate scroll progress through section
+                let scrollPercent = 0;
+                if (sectionTop < 0 && sectionTop + sectionHeight > windowHeight) {
+                    // Section is in viewport and being scrolled through
+                    const scrolled = Math.abs(sectionTop);
+                    const totalScrollable = sectionHeight - windowHeight;
+                    if (totalScrollable > 0) {
+                        scrollPercent = Math.min(100, Math.max(0, (scrolled / totalScrollable) * 100));
+                    }
+                } else if (sectionTop >= 0) {
+                    // Section hasn't reached viewport yet
+                    scrollPercent = 0;
+                } else {
+                    // Section has been scrolled past
+                    scrollPercent = 100;
+                }
+                
+                // Initialize visualization if needed
+                if (scrollPercent > 0.1 && !highAIOpportunityViz) {
+                    createHighAIOpportunity();
+                    // Wait a bit for visualization to render before updating transition
+                    setTimeout(function() {
+                        updateHighAIOpportunityTransition(scrollPercent);
+                    }, 500);
+                } else if (highAIOpportunityViz) {
+                    // Update transition if scroll percent changed
+                    if (Math.abs(scrollPercent - lastScrollPercent5) > 0.1) {
+                        lastScrollPercent5 = scrollPercent;
+                        updateHighAIOpportunityTransition(scrollPercent);
+                    }
+                }
             }
+            
+            // Use requestAnimationFrame for smooth scrolling
+            let ticking5 = false;
+            function requestTick5() {
+                if (!ticking5) {
+                    window.requestAnimationFrame(function() {
+                        onScroll5();
+                        ticking5 = false;
+                    });
+                    ticking5 = true;
+                }
+            }
+            
+            $(window).on('scroll', requestTick5);
+            $(window).on('resize', requestTick5);
+            onScroll5(); // Initial call
+            scrollHandlerAttached5 = true;
         }
-    });
+        
+        // Set up scroll handler immediately
+        setupSection5ScrollHandler();
+    }
 
     // Section 6: Global Map
     scrollWatcher({

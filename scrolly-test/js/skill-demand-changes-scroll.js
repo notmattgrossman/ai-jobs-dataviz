@@ -107,6 +107,10 @@ function createSkillDemandChanges() {
         const g = svg.append("g")
             .attr("transform", `translate(${margin.left},${margin.top})`);
 
+        // Create a separate group for data elements that will be clipped
+        const dataGroup = g.append("g")
+            .attr("class", "data-group");
+
         // Create tooltip
         const tooltip = d3.select("body")
             .append("div")
@@ -159,8 +163,8 @@ function createSkillDemandChanges() {
             .y(d => yScale(d.demandIndex))
             .curve(d3.curveMonotoneX);
 
-        // Create lines for each skill
-        const lines = g.selectAll(".skill-line")
+        // Create lines for each skill (in data group for clipping)
+        const lines = dataGroup.selectAll(".skill-line")
             .data(topSkills)
             .enter()
             .append("g")
@@ -224,8 +228,8 @@ function createSkillDemandChanges() {
             });
         });
 
-        // Add vertical line at 2024
-        g.append("line")
+        // Add vertical line at 2024 (in data group for clipping)
+        dataGroup.append("line")
             .attr("x1", xScale(2024))
             .attr("x2", xScale(2024))
             .attr("y1", 0)
@@ -360,10 +364,89 @@ function createSkillDemandChanges() {
             .attr("fill", skillTextMuted)
             .text("Dashed vertical line indicates transition from historical data (2017-2024) to projected data (2025)");
 
-        skillDemandChangesViz = { svg, g, xScale, yScale, lines };
+        // Create clipping mask for progressive reveal from y-axis
+        const defs = svg.append("defs");
+        const clipPath = defs.append("clipPath")
+            .attr("id", "timeline-clip");
+        
+        // Create rectangle that starts at y-axis and grows to the right
+        const revealRect = clipPath.append("rect")
+            .attr("id", "reveal-rect")
+            .attr("x", 0)
+            .attr("y", 0)
+            .attr("width", 0) // Start with width 0 (at y-axis)
+            .attr("height", height); // Full height from start
+        
+        // Apply clipping only to the data group (not axes)
+        dataGroup.attr("clip-path", "url(#timeline-clip)");
+        
+        // Create a vertical line indicator showing the current reveal position
+        const revealLine = g.append("line")
+            .attr("id", "reveal-line")
+            .attr("x1", 0)
+            .attr("x2", 0)
+            .attr("y1", 0)
+            .attr("y2", height)
+            .attr("stroke", skillTextMuted)
+            .attr("stroke-width", 2.5)
+            .attr("stroke-opacity", 0.6)
+            .attr("stroke-dasharray", "4,4")
+            .style("pointer-events", "none");
+
+        skillDemandChangesViz = { 
+            svg, 
+            g, 
+            xScale, 
+            yScale, 
+            lines, 
+            revealRect, 
+            revealLine,
+            dataGroup,
+            width,
+            height,
+            margin
+        };
+        
+        // Initialize with lens at 0
+        updateSkillDemandLens(0);
     }).catch(function(error) {
         console.error("Error loading CSV:", error);
     });
+}
+
+// Function to update timeline reveal based on scroll progress (0-100)
+function updateSkillDemandLens(scrollPercent) {
+    if (!skillDemandChangesViz) return;
+    
+    const { revealRect, revealLine, width, xScale } = skillDemandChangesViz;
+    
+    // Use easing for smoother reveal
+    const easedProgress = d3.easeCubicOut(scrollPercent / 100);
+    
+    // Calculate current reveal width (from y-axis to current position)
+    const currentWidth = width * easedProgress;
+    
+    // Calculate the current year being revealed
+    const currentX = currentWidth;
+    const currentYear = xScale.invert(currentX);
+    
+    // Update reveal rectangle (clipping path)
+    revealRect
+        .interrupt()
+        .transition()
+        .duration(50)
+        .ease(d3.easeLinear)
+        .attr("width", Math.max(0, currentWidth));
+    
+    // Update reveal line indicator
+    revealLine
+        .interrupt()
+        .transition()
+        .duration(50)
+        .ease(d3.easeLinear)
+        .attr("x1", currentX)
+        .attr("x2", currentX)
+        .attr("opacity", scrollPercent > 1 && scrollPercent < 99 ? 0.6 : 0);
 }
 
 // Initialize on load
